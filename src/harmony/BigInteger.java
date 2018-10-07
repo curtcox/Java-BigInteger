@@ -733,10 +733,7 @@ public class BigInteger {
             return BigInteger.ONE.mod(m);
         }
         // From now on: (m > 0) and (exponent >= 0)
-        boolean odd = m.testBit(0);
-        BigInteger res = odd
-                ? Division.oddModPow(base.abs(), exponent, m)
-                : Division.evenModPow(base.abs(), exponent, m);
+        BigInteger res = Division.oddModPow(base.abs(), exponent, m);
         if ((base.sign < 0) && exponent.testBit(0)) {
             // -b^e mod m == ((-1 mod m) * (b^e mod m)) mod m
             res = m.subtract(BigInteger.ONE).multiply(res).mod(m);

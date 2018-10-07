@@ -369,21 +369,6 @@ class Division {
         return monPro(res, BigInteger.ONE, modulus, n2);
     }
 
-    /**
-     * Performs modular exponentiation using the Montgomery Reduction. It
-     * requires that all parameters be positive and the modulus be even. Based
-     * <i>The square and multiply algorithm and the Montgomery Reduction C. K.
-     * Koc - Montgomery Reduction with Even Modulus</i>. The square and
-     * multiply algorithm and the Montgomery Reduction.
-     *
-     * @ar.org.fitc.ref "C. K. Koc - Montgomery Reduction with Even Modulus"
-     * @see BigInteger#modPow(BigInteger, BigInteger)
-     */
-    static BigInteger evenModPow(BigInteger base, BigInteger exponent,
-                                 BigInteger modulus) {
-        throw new UnsupportedOperationException();
-    }
-
     private static void monReduction(int[] res, BigInteger modulus, int n2) {
 
         /* res + m*modulus_digits */
