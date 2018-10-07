@@ -397,40 +397,6 @@ class Division {
         throw new UnsupportedOperationException();
     }
 
-    /**
-     * It requires that all parameters be positive.
-     *
-     * @return {@code base<sup>exponent</sup> mod (2<sup>j</sup>)}.
-     * @see BigInteger#modPow(BigInteger, BigInteger)
-     */
-    static BigInteger pow2ModPow(BigInteger base, BigInteger exponent, int j) {
-        // PRE: (base > 0), (exponent > 0) and (j > 0)
-        BigInteger res = BigInteger.ONE;
-        BigInteger e = exponent.copy();
-        BigInteger baseMod2toN = base.copy();
-        BigInteger res2;
-        /*
-         * If 'base' is odd then it's coprime with 2^j and phi(2^j) = 2^(j-1);
-         * so we can reduce reduce the exponent (mod 2^(j-1)).
-         */
-        if (base.testBit(0)) {
-            inplaceModPow2(e, j - 1);
-        }
-        inplaceModPow2(baseMod2toN, j);
-
-        for (int i = e.bitLength() - 1; i >= 0; i--) {
-            res2 = res.copy();
-            inplaceModPow2(res2, j);
-            res = res.multiply(res2);
-            if (BitLevel.testBit(e, i)) {
-                res = res.multiply(baseMod2toN);
-                inplaceModPow2(res, j);
-            }
-        }
-        inplaceModPow2(res, j);
-        return res;
-    }
-
     private static void monReduction(int[] res, BigInteger modulus, int n2) {
 
         /* res + m*modulus_digits */
