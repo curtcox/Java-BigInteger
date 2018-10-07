@@ -127,25 +127,19 @@ public class BigInteger {
      *             if {@code numBits} < 0.
      */
     public BigInteger(int numBits, Random rnd) {
-        if (numBits < 0) {
+        if (numBits < 1) {
             // math.1B=numBits must be non-negative
             throw new IllegalArgumentException(Messages.getString("math.1B")); //$NON-NLS-1$
         }
-        if (numBits == 0) {
-            sign = 0;
-            numberLength = 1;
-            digits = new int[] { 0 };
-        } else {
-            sign = 1;
-            numberLength = (numBits + 31) >> 5;
-            digits = new int[numberLength];
-            for (int i = 0; i < numberLength; i++) {
-                digits[i] = rnd.nextInt();
-            }
-            // Using only the necessary bits
-            digits[numberLength - 1] >>>= (-numBits) & 31;
-            cutOffLeadingZeroes();
+        sign = 1;
+        numberLength = (numBits + 31) >> 5;
+        digits = new int[numberLength];
+        for (int i = 0; i < numberLength; i++) {
+            digits[i] = rnd.nextInt();
         }
+        // Using only the necessary bits
+        digits[numberLength - 1] >>>= (-numBits) & 31;
+        cutOffLeadingZeroes();
     }
 
     /**
