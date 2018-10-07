@@ -368,7 +368,6 @@ class Division {
     }
 
     /**
-     * @param m a positive modulus
      * Return the greatest common divisor of op1 and op2,
      *
      * @param op1
@@ -504,7 +503,6 @@ class Division {
      * "Laszlo Hars - Modular Inverse Algorithms Without Multiplications
      * for Cryptographic Applications"
      *
-     * @see BigInteger#modInverse(BigInteger)
      * @param a
      *            a positive number
      * @param m
@@ -757,7 +755,6 @@ class Division {
      * @param n2 The digit modulus'[0].
      * @ar.org.fitc.ref "C. K. Koc - Analyzing and Comparing Montgomery
      *                  Multiplication Algorithms"
-     * @see #modPowOdd(BigInteger, BigInteger, BigInteger)
      */
     static BigInteger monPro(BigInteger a, BigInteger b, BigInteger modulus, int n2) {
         int modulusLen = modulus.numberLength;
@@ -771,8 +768,6 @@ class Division {
 
     /**
      * Performs the final reduction of the Montgomery algorithm.
-     * @see monPro(BigInteger, BigInteger, BigInteger, long)
-     * @see monSquare(BigInteger, BigInteger, long)
      */
     static BigInteger finalSubtraction(int res[], BigInteger modulus){
 
