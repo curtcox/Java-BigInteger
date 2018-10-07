@@ -66,15 +66,8 @@ class Elementary {
 
         if (op1Sign == op2Sign) {
             resSign = op1Sign;
-            // an augend should not be shorter than addend
-            resDigits = (op1Len >= op2Len)
-                    ? add(op1.digits, op1Len, op2.digits, op2Len)
-                    : add(op2.digits, op2Len, op1.digits, op1Len);
+            resDigits = add(op1.digits, op1Len, op2.digits, op2Len);
         } else { // signs are different
-            int cmp = ((op1Len != op2Len)
-                    ? ((op1Len > op2Len) ? 1 : -1)
-                    : compareArrays(op1.digits, op2.digits, op1Len));
-
             // a minuend should not be shorter than subtrahend
             resSign = op2Sign;
             resDigits = subtract(op2.digits, op2Len, op1.digits, op1Len);
