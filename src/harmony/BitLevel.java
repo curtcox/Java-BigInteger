@@ -34,9 +34,6 @@ package harmony;
  */
 class BitLevel {
 
-    /** Just to denote that this class can't be instantiated. */
-    private BitLevel() {}
-
     /** @see BigInteger#bitLength() */
     static int bitLength(BigInteger val) {
         int bLength = (val.numberLength << 5);
