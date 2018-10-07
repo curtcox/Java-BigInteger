@@ -20,8 +20,6 @@ package harmony;
 
 import java.util.Random;
 
-import harmony.internal.nls.Messages;
-
 /**
  * This class represents immutable integer numbers of arbitrary length. Large
  * numbers are typically used in security applications and therefore BigIntegers
@@ -121,8 +119,7 @@ public class BigInteger {
      */
     public BigInteger(int numBits, Random rnd) {
         if (numBits < 1) {
-            // math.1B=numBits must be non-negative
-            throw new IllegalArgumentException(Messages.getString("math.1B")); //$NON-NLS-1$
+            throw new IllegalArgumentException();
         }
         sign = 1;
         numberLength = (numBits + 31) >> 5;
@@ -151,8 +148,7 @@ public class BigInteger {
      */
     public BigInteger(int bitLength, int certainty, Random rnd) {
         if (bitLength < 2) {
-            // math.1C=bitLength < 2
-            throw new ArithmeticException(Messages.getString("math.1C")); //$NON-NLS-1$
+            throw new ArithmeticException();
         }
         BigInteger me = Primality.consBigInteger(bitLength, certainty, rnd);
         sign = me.sign;
@@ -175,8 +171,7 @@ public class BigInteger {
      */
     public BigInteger(byte[] val) {
         if (val.length == 0) {
-            // math.12=Zero length BigInteger
-            throw new NumberFormatException(Messages.getString("math.12")); //$NON-NLS-1$
+            throw new NumberFormatException();
         }
         sign = 1;
         putBytesPositiveToIntegers(val);
@@ -512,8 +507,7 @@ public class BigInteger {
      */
     public BigInteger remainder(BigInteger divisor) {
         if (divisor.sign == 0) {
-            // math.17=BigInteger divide by zero
-            throw new ArithmeticException(Messages.getString("math.17")); //$NON-NLS-1$
+            throw new ArithmeticException();
         }
         int thisLen = numberLength;
         int divisorLen = divisor.numberLength;
@@ -557,8 +551,7 @@ public class BigInteger {
      */
     public BigInteger modPow(BigInteger exponent, BigInteger m) {
         if (m.sign <= 0) {
-            // math.18=BigInteger: modulus not positive
-            throw new ArithmeticException(Messages.getString("math.18")); //$NON-NLS-1$
+            throw new ArithmeticException();
         }
         BigInteger base = this;
 
@@ -585,8 +578,7 @@ public class BigInteger {
      */
     public BigInteger mod(BigInteger m) {
         if (m.sign <= 0) {
-            // math.18=BigInteger: modulus not positive
-            throw new ArithmeticException(Messages.getString("math.18")); //$NON-NLS-1$
+            throw new ArithmeticException();
         }
         BigInteger rem = remainder(m);
         return ((rem.sign < 0) ? rem.add(m) : rem);
