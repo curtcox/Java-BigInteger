@@ -172,40 +172,7 @@ public class BigInteger {
         numberLength = me.numberLength;
         digits = me.digits;
     }
-
-    /**
-     * Constructs a new {@code BigInteger} instance from the string
-     * representation. The string representation consists of an optional minus
-     * sign followed by a non-empty sequence of digits in the specified radix.
-     * For the conversion the method {@code Character.digit(char, radix)} is
-     * used.
-     *
-     * @param val
-     *            string representation of the new {@code BigInteger}.
-     * @param radix
-     *            the base to be used for the conversion.
-     * @throws NullPointerException
-     *             if {@code val == null}.
-     * @throws NumberFormatException
-     *             if {@code val} is not a valid representation of a {@code
-     *             BigInteger} or if {@code radix < Character.MIN_RADIX} or
-     *             {@code radix > Character.MAX_RADIX}.
-     */
-    public BigInteger(String val, int radix) {
-        if (val == null) {
-            throw new NullPointerException();
-        }
-        if ((radix < Character.MIN_RADIX) || (radix > Character.MAX_RADIX)) {
-            // math.11=Radix out of range
-            throw new NumberFormatException(Messages.getString("math.11")); //$NON-NLS-1$
-        }
-        if (val.length() == 0) {
-            // math.12=Zero length BigInteger
-            throw new NumberFormatException(Messages.getString("math.12")); //$NON-NLS-1$
-        }
-        setFromString(this, val, radix);
-    }
-
+    
     /**
      * Constructs a new {@code BigInteger} instance with the given sign and the
      * given magnitude. The sign is given as an integer (-1 for negative, 0 for
