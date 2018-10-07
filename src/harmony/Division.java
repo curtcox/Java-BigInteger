@@ -189,19 +189,6 @@ class Division {
     }
 
     /**
-     * Divides a <code>BigInteger</code> by a signed <code>int</code> and
-     * returns the remainder.
-     *
-     * @param dividend the BigInteger to be divided. Must be non-negative.
-     * @param divisor a signed int
-     * @return divide % divisor
-     */
-    static int remainder(BigInteger dividend, int divisor) {
-        return remainderArrayByInt(dividend.digits, dividend.numberLength,
-                divisor);
-    }
-
-    /**
      * Divides an unsigned long a by an unsigned int b. It is supposed that the
      * most significant bit of b is set to 1, i.e. b < 0
      *
