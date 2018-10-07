@@ -17,8 +17,6 @@
 
 package harmony;
 
-import harmony.internal.nls.Messages;
-
 /**
  * Static library that provides all operations related with division and modular
  * arithmetic to {@link BigInteger}. Some methods are provided in both mutable

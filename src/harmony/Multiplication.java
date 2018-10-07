@@ -17,8 +17,6 @@
 
 package harmony;
 
-import harmony.internal.nls.Messages;
-
 /**
  * Static library that provides all multiplication of {@link BigInteger} methods.
  */
