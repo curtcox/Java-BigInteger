@@ -427,27 +427,7 @@ public class BigInteger {
         if (n == 0) {
             return ((digits[0] & 1) != 0);
         }
-        if (n < 0) {
-            // math.15=Negative bit address
-            throw new ArithmeticException(Messages.getString("math.15")); //$NON-NLS-1$
-        }
-        int intCount = n >> 5;
-        if (intCount >= numberLength) {
-            return (sign < 0);
-        }
-        int digit = digits[intCount];
-        n = (1 << (n & 31)); // int with 1 set to the needed position
-        if (sign < 0) {
-            int firstNonZeroDigit = getFirstNonzeroDigit();
-            if (intCount < firstNonZeroDigit) {
-                return false;
-            } else if (firstNonZeroDigit == intCount) {
-                digit = -digit;
-            } else {
-                digit = ~digit;
-            }
-        }
-        return ((digit & n) != 0);
+        throw new IllegalArgumentException();
     }
 
     /**
@@ -461,9 +441,6 @@ public class BigInteger {
      * @return position of lowest bit if {@code this != 0}, {@code -1} otherwise
      */
     public int getLowestSetBit() {
-        if (sign == 0) {
-            return -1;
-        }
         // (sign != 0) implies that exists some non zero digit
         int i = getFirstNonzeroDigit();
         return ((i << 5) + Integer.numberOfTrailingZeros(digits[i]));
@@ -500,12 +477,10 @@ public class BigInteger {
         if (this == x) {
             return true;
         }
-        if (x instanceof BigInteger) {
-            BigInteger x1 = (BigInteger) x;
-            return sign == x1.sign && numberLength == x1.numberLength
-                    && equalsArrays(x1.digits);
-        }
-        return false;
+        BigInteger x1 = (BigInteger) x;
+        return sign == x1.sign && numberLength == x1.numberLength
+                && equalsArrays(x1.digits);
+        
     }
 
     boolean equalsArrays(final int[] b) {
@@ -526,13 +501,6 @@ public class BigInteger {
      *             if {@code val == null}.
      */
     public BigInteger multiply(BigInteger val) {
-        // This let us to throw NullPointerException when val == null
-        if (val.sign == 0) {
-            return ZERO;
-        }
-        if (sign == 0) {
-            return ZERO;
-        }
         return Multiplication.multiply(this, val);
     }
 
