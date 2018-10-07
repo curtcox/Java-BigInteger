@@ -75,9 +75,6 @@ class Elementary {
                     ? ((op1Len > op2Len) ? 1 : -1)
                     : compareArrays(op1.digits, op2.digits, op1Len));
 
-            if (cmp == BigInteger.EQUALS) {
-                return BigInteger.ZERO;
-            }
             // a minuend should not be shorter than subtrahend
             resSign = op2Sign;
             resDigits = subtract(op2.digits, op2Len, op1.digits, op1Len);
@@ -130,16 +127,10 @@ class Elementary {
 
         if (cmp == BigInteger.LESS) {
             resSign = -op2Sign;
-            resDigits = ( op1Sign == op2Sign )
-                    ? subtract (op2.digits, op2Len, op1.digits, op1Len)
-                    : add (op2.digits, op2Len, op1.digits, op1Len);
+            resDigits = subtract (op2.digits, op2Len, op1.digits, op1Len);
         } else {
             resSign = op1Sign;
-            if (op1Sign == op2Sign) {
-                resDigits = subtract (op1.digits, op1Len, op2.digits, op2Len);
-            } else {
-                resDigits = add (op1.digits, op1Len, op2.digits, op2Len);
-            }
+            resDigits = subtract (op1.digits, op1Len, op2.digits, op2Len);
         }
         BigInteger res = new BigInteger (resSign, resDigits.length, resDigits);
         res.cutOffLeadingZeroes ();
