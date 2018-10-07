@@ -27,6 +27,11 @@ public class BigInteger_Test {
     }
 
     @Test
+    public void random_prime_800() {
+        assertRandomPrime(800);
+    }
+
+    @Test
     public void random_prime_1000() {
         assertRandomPrime(1000);
     }
