@@ -65,7 +65,7 @@ class BitLevel {
         // PRE: 0 <= n < val.bitLength()
         return ((val.digits[n >> 5] & (1 << (n & 31))) != 0);
     }
-    
+
     /** @see BigInteger#shiftLeft(int) */
     static BigInteger shiftLeft(BigInteger source, int count) {
         int intCount = count >> 5;
@@ -79,22 +79,7 @@ class BitLevel {
         result.cutOffLeadingZeroes();
         return result;
     }
-
-    /**
-     * Performs {@code val <<= count}.
-     */
-    // val should have enough place (and one digit more)
-    static void inplaceShiftLeft(BigInteger val, int count) {
-        int intCount = count >> 5; // count of integers
-        val.numberLength += intCount
-                + ( Integer
-                .numberOfLeadingZeros(val.digits[val.numberLength - 1])
-                - ( count & 31 ) >= 0 ? 0 : 1 );
-        shiftLeft(val.digits, val.digits, intCount, count & 31);
-        val.cutOffLeadingZeroes();
-        val.unCache();
-    }
-
+    
     /**
      * Abstractly shifts left an array of integers in little endian (i.e. shift
      * it right). Total shift distance in bits is intCount * 32 + count
