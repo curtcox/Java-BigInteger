@@ -36,22 +36,6 @@ class Multiplication {
         return karatsuba(x, y);
     }
 
-    /**
-     * Performs the multiplication with the Karatsuba's algorithm.
-     * <b>Karatsuba's algorithm:</b>
-     *<tt>
-     *             u = u<sub>1</sub> * B + u<sub>0</sub><br>
-     *             v = v<sub>1</sub> * B + v<sub>0</sub><br>
-     *
-     *
-     *  u*v = (u<sub>1</sub> * v<sub>1</sub>) * B<sub>2</sub> + ((u<sub>1</sub> - u<sub>0</sub>) * (v<sub>0</sub> - v<sub>1</sub>) + u<sub>1</sub> * v<sub>1</sub> +
-     *  u<sub>0</sub> * v<sub>0</sub> ) * B + u<sub>0</sub> * v<sub>0</sub><br>
-     *</tt>
-     * @param op1 first factor of the product
-     * @param op2 second factor of the product
-     * @return {@code op1 * op2}
-     * @see #multiply(BigInteger, BigInteger)
-     */
     static BigInteger karatsuba(BigInteger op1, BigInteger op2) {
         if (op2.numberLength > op1.numberLength) {
             throw new IllegalArgumentException();
@@ -59,11 +43,6 @@ class Multiplication {
         if (op2.numberLength < whenUseKaratsuba) {
             return multiplyPAP(op1, op2);
         }
-        /*  Karatsuba:  u = u1*B + u0
-         *              v = v1*B + v0
-         *  u*v = (u1*v1)*B^2 + ((u1-u0)*(v0-v1) + u1*v1 + u0*v0)*B + u0*v0
-         */
-        // ndiv2 = (op1.numberLength / 2) * 32
         int ndiv2 = (op1.numberLength & 0xFFFFFFFE) << 4;
         BigInteger upperOp1 = op1.shiftRight(ndiv2);
         BigInteger upperOp2 = op2.shiftRight(ndiv2);
@@ -81,91 +60,6 @@ class Multiplication {
         return upper.add(middle).add(lower);
     }
 
-    /**
-     * Multiplies two BigIntegers.
-     * Implements traditional scholar algorithm described by Knuth.
-     *
-     * <br><tt>
-     *         <table border="0">
-     * <tbody>
-     *
-     *
-     * <tr>
-     * <td align="center">A=</td>
-     * <td>a<sub>3</sub></td>
-     * <td>a<sub>2</sub></td>
-     * <td>a<sub>1</sub></td>
-     * <td>a<sub>0</sub></td>
-     * <td></td>
-     * <td></td>
-     * </tr>
-     *
-     *<tr>
-     * <td align="center">B=</td>
-     * <td></td>
-     * <td>b<sub>2</sub></td>
-     * <td>b<sub>1</sub></td>
-     * <td>b<sub>1</sub></td>
-     * <td></td>
-     * <td></td>
-     * </tr>
-     *
-     * <tr>
-     * <td></td>
-     * <td></td>
-     * <td></td>
-     * <td>b<sub>0</sub>*a<sub>3</sub></td>
-     * <td>b<sub>0</sub>*a<sub>2</sub></td>
-     * <td>b<sub>0</sub>*a<sub>1</sub></td>
-     * <td>b<sub>0</sub>*a<sub>0</sub></td>
-     * </tr>
-     *
-     * <tr>
-     * <td></td>
-     * <td></td>
-     * <td>b<sub>1</sub>*a<sub>3</sub></td>
-     * <td>b<sub>1</sub>*a<sub>2</sub></td>
-     * <td>b<sub>1</sub>*a1</td>
-     * <td>b<sub>1</sub>*a0</td>
-     * </tr>
-     *
-     * <tr>
-     * <td>+</td>
-     * <td>b<sub>2</sub>*a<sub>3</sub></td>
-     * <td>b<sub>2</sub>*a<sub>2</sub></td>
-     * <td>b<sub>2</sub>*a<sub>1</sub></td>
-     * <td>b<sub>2</sub>*a<sub>0</sub></td>
-     * </tr>
-     *
-     *<tr>
-     * <td></td>
-     *<td>______</td>
-     * <td>______</td>
-     * <td>______</td>
-     * <td>______</td>
-     * <td>______</td>
-     * <td>______</td>
-     *</tr>
-     *
-     * <tr>
-     *
-     * <td align="center">A*B=R=</td>
-     * <td align="center">r<sub>5</sub></td>
-     * <td align="center">r<sub>4</sub></td>
-     * <td align="center">r<sub>3</sub></td>
-     * <td align="center">r<sub>2</sub></td>
-     * <td align="center">r<sub>1</sub></td>
-     * <td align="center">r<sub>0</sub></td>
-     * <td></td>
-     * </tr>
-     *
-     * </tbody>
-     * </table>
-     *
-     *</tt>
-     *
-     * @return a {@code BigInteger} of value {@code  op1 * op2}
-     */
     static BigInteger multiplyPAP(BigInteger a, BigInteger b) {
         // PRE: a >= b
         int aLen = a.numberLength;
@@ -221,14 +115,6 @@ class Multiplication {
         }
     }
 
-    /**
-     * Multiplies an array of integers by an integer value
-     * and saves the result in {@code res}.
-     * @param a the array of integers
-     * @param aSize the number of elements of intArray to be multiplied
-     * @param factor the multiplier
-     * @return the top digit of production
-     */
     private static int multiplyByInt(int res[], int a[], final int aSize, final int factor) {
         long carry = 0;
         for (int i = 0; i < aSize; i++) {
@@ -239,12 +125,6 @@ class Multiplication {
         return (int)carry;
     }
 
-
-    /**
-     *  Performs a<sup>2</sup>
-     *  @param a The number to square.
-     *  @param aLen The length of the number to square.
-     */
     static int[] square(int[] a, int aLen, int[] res) {
         long carry;
 
@@ -273,20 +153,6 @@ class Multiplication {
         return res;
     }
 
-    /**
-     * Computes the value unsigned ((uint)a*(uint)b + (uint)c + (uint)d). This
-     * method could improve the readability and performance of the code.
-     *
-     * @param a
-     *            parameter 1
-     * @param b
-     *            parameter 2
-     * @param c
-     *            parameter 3
-     * @param d
-     *            parameter 4
-     * @return value of expression
-     */
     static long unsignedMultAddAdd(int a, int b, int c, int d) {
         return (a & 0xFFFFFFFFL) * (b & 0xFFFFFFFFL) + (c & 0xFFFFFFFFL) + (d & 0xFFFFFFFFL);
     }
