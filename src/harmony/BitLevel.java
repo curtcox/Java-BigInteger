@@ -39,19 +39,9 @@ class BitLevel {
 
     /** @see BigInteger#bitLength() */
     static int bitLength(BigInteger val) {
-        if (val.sign == 0) {
-            return 0;
-        }
         int bLength = (val.numberLength << 5);
         int highDigit = val.digits[val.numberLength - 1];
 
-        if (val.sign < 0) {
-            int i = val.getFirstNonzeroDigit();
-            // We reduce the problem to the positive case.
-            if (i == val.numberLength - 1) {
-                highDigit--;
-            }
-        }
         // Subtracting all sign bits
         bLength -= Integer.numberOfLeadingZeros(highDigit);
         return bLength;
@@ -126,9 +116,6 @@ class BitLevel {
             int val = source[i];
             result[i] = (val << 1) | carry;
             carry = val >>> 31;
-        }
-        if (carry != 0) {
-            result[srcLen] = carry;
         }
     }
 
