@@ -54,8 +54,7 @@ class Division {
      * @param bLength the divisor's length
      * @return the remainder
      */
-    static int[] divide(int quot[], int quotLength, int a[], int aLength,
-                        int b[], int bLength) {
+    static int[] divide(int quot[], int quotLength, int a[], int aLength, int b[], int bLength) {
 
         int normA[] = new int[aLength + 1]; // the normalized dividend
         // an extra byte is needed for correct shift

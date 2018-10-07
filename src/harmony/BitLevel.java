@@ -145,8 +145,7 @@ class BitLevel {
      *            the number of bits to be shifted
      * @return dropped bit's are all zero (i.e. remaider is zero)
      */
-    static boolean shiftRight(int result[], int resultLen, int source[],
-                              int intCount, int count) {
+    static boolean shiftRight(int result[], int resultLen, int source[], int intCount, int count) {
         int i;
         boolean allZero = true;
         for (i = 0; i < intCount; i++)

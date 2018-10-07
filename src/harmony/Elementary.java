@@ -29,10 +29,6 @@ package harmony;
  */
 class Elementary {
 
-    /** Just to denote that this class can't be instantiated */
-    private Elementary() {
-    }
-
     /**
      * Compares two arrays. All elements are treated as unsigned integers. The
      * magnitude is the bit chain of elements in big-endian order.
@@ -134,8 +130,7 @@ class Elementary {
      * Performs {@code res = a - b}. It is assumed the magnitude of a is not
      * less than the magnitude of b.
      */
-    private static void subtract(int res[], int a[], int aSize, int b[],
-                                 int bSize) {
+    private static void subtract(int res[], int a[], int aSize, int b[], int bSize) {
         // PRE: a[] >= b[]
         int i;
         long borrow = 0;
@@ -178,8 +173,7 @@ class Elementary {
      */
     static void inplaceSubtract(BigInteger op1, BigInteger op2) {
         // PRE: op1 >= op2 > 0
-        subtract (op1.digits, op1.digits, op1.numberLength, op2.digits,
-                op2.numberLength);
+        subtract (op1.digits, op1.digits, op1.numberLength, op2.digits, op2.numberLength);
         op1.cutOffLeadingZeroes ();
         op1.unCache();
     }
