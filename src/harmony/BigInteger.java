@@ -877,33 +877,7 @@ public class BigInteger extends Number implements Comparable<BigInteger>,
         }
         return i < 0;
     }
-
-    /**
-     * Returns a string representation of this {@code BigInteger} in decimal
-     * form.
-     *
-     * @return a string representation of {@code this} in decimal form.
-     */
-    @Override
-    public String toString() {
-        return "?";
-    }
-
-    /**
-     * Returns a string containing a string representation of this {@code
-     * BigInteger} with base radix. If {@code radix < Character.MIN_RADIX} or
-     * {@code radix > Character.MAX_RADIX} then a decimal representation is
-     * returned. The characters of the string representation are generated with
-     * method {@code Character.forDigit}.
-     *
-     * @param radix
-     *            base to be used for the string representation.
-     * @return a string representation of this with radix 10.
-     */
-    public String toString(int radix) {
-        return "?";
-    }
-
+    
     /**
      * Returns a new {@code BigInteger} whose value is greatest common divisor
      * of {@code this} and {@code val}. If {@code this==0} and {@code val==0}
