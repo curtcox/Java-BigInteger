@@ -301,7 +301,7 @@ class Division {
         }
         return res;
     }
-    
+
     /*Implements the Montgomery modular exponentiation based in <i>The sliding windows algorithm and the Mongomery
      *Reduction</i>.
      *@ar.org.fitc.ref "A. Menezes,P. van Oorschot, S. Vanstone - Handbook of Applied Cryptography";
