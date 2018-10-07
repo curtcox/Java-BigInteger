@@ -254,25 +254,14 @@ public class BigInteger {
      *            The magnitude of the number
      */
     BigInteger(int signum, int digits[]) {
-        if (digits.length == 0) {
-            sign = 0;
-            numberLength = 1;
-            this.digits = new int[] { 0 };
-        } else {
-            sign = signum;
-            numberLength = digits.length;
-            this.digits = digits;
-            cutOffLeadingZeroes();
-        }
+        sign = signum;
+        numberLength = digits.length;
+        this.digits = digits;
+        cutOffLeadingZeroes();
     }
 
     public static BigInteger valueOf(long val) {
-        if (val < 0) {
-            if (val != -1) {
-                return new BigInteger(-1, -val);
-            }
-            return MINUS_ONE;
-        } else if (val <= 10) {
+        if (val <= 10) {
             return SMALL_VALUES[(int) val];
         } else {// (val > 10)
             return new BigInteger(1, val);
@@ -317,35 +306,14 @@ public class BigInteger {
         digitIndex = iThis;
         bytesLen -= iThis << 2;
 
-        if (sign < 0) {
-            digit = -temp.digits[digitIndex];
+        while (bytesLen > firstByteNumber) {
+            digit = temp.digits[digitIndex];
             digitIndex++;
             if (digitIndex == numberLength) {
                 bytesInInteger = highBytes;
             }
             for (int i = 0; i < bytesInInteger; i++, digit >>= 8) {
                 bytes[--bytesLen] = (byte) digit;
-            }
-            while (bytesLen > firstByteNumber) {
-                digit = ~temp.digits[digitIndex];
-                digitIndex++;
-                if (digitIndex == numberLength) {
-                    bytesInInteger = highBytes;
-                }
-                for (int i = 0; i < bytesInInteger; i++, digit >>= 8) {
-                    bytes[--bytesLen] = (byte) digit;
-                }
-            }
-        } else {
-            while (bytesLen > firstByteNumber) {
-                digit = temp.digits[digitIndex];
-                digitIndex++;
-                if (digitIndex == numberLength) {
-                    bytesInInteger = highBytes;
-                }
-                for (int i = 0; i < bytesInInteger; i++, digit >>= 8) {
-                    bytes[--bytesLen] = (byte) digit;
-                }
             }
         }
         return bytes;
@@ -401,9 +369,6 @@ public class BigInteger {
      *         otherwise
      */
     public BigInteger shiftRight(int n) {
-        if ((n == 0) || (sign == 0)) {
-            return this;
-        }
         return ((n > 0) ? BitLevel.shiftRight(this, n) : BitLevel.shiftLeft(
                 this, -n));
     }
@@ -423,9 +388,6 @@ public class BigInteger {
      *         otherwise
      */
     public BigInteger shiftLeft(int n) {
-        if ((n == 0) || (sign == 0)) {
-            return this;
-        }
         return ((n > 0) ? BitLevel.shiftLeft(this, n) : BitLevel.shiftRight(
                 this, -n));
     }
