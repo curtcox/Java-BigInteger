@@ -567,10 +567,6 @@ public class BigInteger extends Number implements Comparable<BigInteger>,
                 this, -n));
     }
 
-    BigInteger shiftLeftOneBit() {
-        return (sign == 0) ? this : BitLevel.shiftLeftOneBit(this);
-    }
-
     /**
      * Returns the length of the value's two's complement representation without
      * leading zeros for positive numbers / without leading ones for negative

@@ -132,16 +132,6 @@ class BitLevel {
         }
     }
 
-    static BigInteger shiftLeftOneBit(BigInteger source) {
-        int srcLen = source.numberLength;
-        int resLen = srcLen + 1;
-        int resDigits[] = new int[resLen];
-        shiftLeftOneBit(resDigits, source.digits, srcLen);
-        BigInteger result = new BigInteger(source.sign, resLen, resDigits);
-        result.cutOffLeadingZeroes();
-        return result;
-    }
-
     /** @see BigInteger#shiftRight(int) */
     static BigInteger shiftRight(BigInteger source, int count) {
         int intCount = count >> 5; // count of integers
@@ -176,7 +166,7 @@ class BitLevel {
         result.cutOffLeadingZeroes();
         return result;
     }
-    
+
     /**
      * Shifts right an array of integers. Total shift distance in bits is
      * intCount * 32 + count.
