@@ -136,32 +136,10 @@ class BitLevel {
     static BigInteger shiftRight(BigInteger source, int count) {
         int intCount = count >> 5; // count of integers
         count &= 31; // count of remaining bits
-        if (intCount >= source.numberLength) {
-            return ((source.sign < 0) ? BigInteger.MINUS_ONE : BigInteger.ZERO);
-        }
-        int i;
         int resLength = source.numberLength - intCount;
         int resDigits[] = new int[resLength + 1];
 
         shiftRight(resDigits, resLength, source.digits, intCount, count);
-        if (source.sign < 0) {
-            // Checking if the dropped bits are zeros (the remainder equals to
-            // 0)
-            for (i = 0; (i < intCount) && (source.digits[i] == 0); i++) {
-                ;
-            }
-            // If the remainder is not zero, add 1 to the result
-            if ((i < intCount)
-                    || ((count > 0) && ((source.digits[i] << (32 - count)) != 0))) {
-                for (i = 0; (i < resLength) && (resDigits[i] == -1); i++) {
-                    resDigits[i] = 0;
-                }
-                if (i == resLength) {
-                    resLength++;
-                }
-                resDigits[i]++;
-            }
-        }
         BigInteger result = new BigInteger(source.sign, resLength, resDigits);
         result.cutOffLeadingZeroes();
         return result;
