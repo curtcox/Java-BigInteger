@@ -1404,23 +1404,6 @@ public class BigInteger extends Number implements Comparable<BigInteger>,
     }
 
     /**
-     * Returns the smallest integer x > {@code this} which is probably prime as
-     * a {@code BigInteger} instance. The probability that the returned {@code
-     * BigInteger} is prime is beyond (1-1/2^80).
-     *
-     * @return smallest integer > {@code this} which is robably prime.
-     * @throws ArithmeticException
-     *             if {@code this < 0}.
-     */
-    public BigInteger nextProbablePrime() {
-        if (sign < 0) {
-            // math.1A=start < 0: {0}
-            throw new ArithmeticException(Messages.getString("math.1A", this)); //$NON-NLS-1$
-        }
-        return Primality.nextProbablePrime(this);
-    }
-
-    /**
      * Returns a random positive {@code BigInteger} instance in the range [0,
      * 2^(bitLength)-1] which is probably prime. The probability that the
      * returned {@code BigInteger} is prime is beyond (1-1/2^80).
