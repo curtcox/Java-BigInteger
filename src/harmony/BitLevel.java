@@ -122,20 +122,20 @@ class BitLevel {
         return result;
     }
 
-    /**
-     * Performs {@code val <<= count}.
-     */
-    // val should have enough place (and one digit more)
-    static void inplaceShiftLeft(BigInteger val, int count) {
-        int intCount = count >> 5; // count of integers
-        val.numberLength += intCount
-                + ( Integer
-                .numberOfLeadingZeros(val.digits[val.numberLength - 1])
-                - ( count & 31 ) >= 0 ? 0 : 1 );
-        shiftLeft(val.digits, val.digits, intCount, count & 31);
-        val.cutOffLeadingZeroes();
-        val.unCache();
-    }
+//    /**
+//     * Performs {@code val <<= count}.
+//     */
+//    // val should have enough place (and one digit more)
+//    static void inplaceShiftLeft(BigInteger val, int count) {
+//        int intCount = count >> 5; // count of integers
+//        val.numberLength += intCount
+//                + ( Integer
+//                .numberOfLeadingZeros(val.digits[val.numberLength - 1])
+//                - ( count & 31 ) >= 0 ? 0 : 1 );
+//        shiftLeft(val.digits, val.digits, intCount, count & 31);
+//        val.cutOffLeadingZeroes();
+//        val.unCache();
+//    }
 
     /**
      * Abstractly shifts left an array of integers in little endian (i.e. shift
@@ -234,31 +234,31 @@ class BitLevel {
         return result;
     }
 
-    /**
-     * Performs {@code val >>= count} where {@code val} is a positive number.
-     */
-    static void inplaceShiftRight(BigInteger val, int count) {
-        int sign = val.signum();
-        if (count == 0 || val.signum() == 0)
-            return;
-        int intCount = count >> 5; // count of integers
-        val.numberLength -= intCount;
-        if (!shiftRight(val.digits, val.numberLength, val.digits, intCount,
-                count & 31)
-                && sign < 0) {
-            // remainder not zero: add one to the result
-            int i;
-            for (i = 0; ( i < val.numberLength ) && ( val.digits[i] == -1 ); i++) {
-                val.digits[i] = 0;
-            }
-            if (i == val.numberLength) {
-                val.numberLength++;
-            }
-            val.digits[i]++;
-        }
-        val.cutOffLeadingZeroes();
-        val.unCache();
-    }
+//    /**
+//     * Performs {@code val >>= count} where {@code val} is a positive number.
+//     */
+//    static void inplaceShiftRight(BigInteger val, int count) {
+//        int sign = val.signum();
+//        if (count == 0 || val.signum() == 0)
+//            return;
+//        int intCount = count >> 5; // count of integers
+//        val.numberLength -= intCount;
+//        if (!shiftRight(val.digits, val.numberLength, val.digits, intCount,
+//                count & 31)
+//                && sign < 0) {
+//            // remainder not zero: add one to the result
+//            int i;
+//            for (i = 0; ( i < val.numberLength ) && ( val.digits[i] == -1 ); i++) {
+//                val.digits[i] = 0;
+//            }
+//            if (i == val.numberLength) {
+//                val.numberLength++;
+//            }
+//            val.digits[i]++;
+//        }
+//        val.cutOffLeadingZeroes();
+//        val.unCache();
+//    }
 
     /**
      * Shifts right an array of integers. Total shift distance in bits is
@@ -301,53 +301,53 @@ class BitLevel {
     }
 
 
-    /**
-     * Performs a flipBit on the BigInteger, returning a BigInteger with the the
-     * specified bit flipped.
-     * @param intCount: the index of the element of the digits array where the operation will be performed
-     * @param bitNumber: the bit's position in the intCount element
-     */
-    static BigInteger flipBit(BigInteger val, int n){
-        int resSign = (val.sign == 0) ? 1 : val.sign;
-        int intCount = n >> 5;
-        int bitN = n & 31;
-        int resLength = Math.max(intCount + 1, val.numberLength) + 1;
-        int resDigits[] = new int[resLength];
-        int i;
-
-        int bitNumber = 1 << bitN;
-        System.arraycopy(val.digits, 0, resDigits, 0, val.numberLength);
-
-        if (val.sign < 0) {
-            if (intCount >= val.numberLength) {
-                resDigits[intCount] = bitNumber;
-            } else {
-                //val.sign<0 y intCount < val.numberLength
-                int firstNonZeroDigit = val.getFirstNonzeroDigit();
-                if (intCount > firstNonZeroDigit) {
-                    resDigits[intCount] ^= bitNumber;
-                } else if (intCount < firstNonZeroDigit) {
-                    resDigits[intCount] = -bitNumber;
-                    for (i=intCount + 1; i < firstNonZeroDigit; i++) {
-                        resDigits[i]=-1;
-                    }
-                    resDigits[i] = resDigits[i]--;
-                } else {
-                    i = intCount;
-                    resDigits[i] = -((-resDigits[intCount]) ^ bitNumber);
-                    if (resDigits[i] == 0) {
-                        for (i++; resDigits[i] == -1 ; i++) {
-                            resDigits[i] = 0;
-                        }
-                        resDigits[i]++;
-                    }
-                }
-            }
-        } else {//case where val is positive
-            resDigits[intCount] ^= bitNumber;
-        }
-        BigInteger result = new BigInteger(resSign, resLength, resDigits);
-        result.cutOffLeadingZeroes();
-        return result;
-    }
+//    /**
+//     * Performs a flipBit on the BigInteger, returning a BigInteger with the the
+//     * specified bit flipped.
+//     * @param intCount: the index of the element of the digits array where the operation will be performed
+//     * @param bitNumber: the bit's position in the intCount element
+//     */
+//    static BigInteger flipBit(BigInteger val, int n){
+//        int resSign = (val.sign == 0) ? 1 : val.sign;
+//        int intCount = n >> 5;
+//        int bitN = n & 31;
+//        int resLength = Math.max(intCount + 1, val.numberLength) + 1;
+//        int resDigits[] = new int[resLength];
+//        int i;
+//
+//        int bitNumber = 1 << bitN;
+//        System.arraycopy(val.digits, 0, resDigits, 0, val.numberLength);
+//
+//        if (val.sign < 0) {
+//            if (intCount >= val.numberLength) {
+//                resDigits[intCount] = bitNumber;
+//            } else {
+//                //val.sign<0 y intCount < val.numberLength
+//                int firstNonZeroDigit = val.getFirstNonzeroDigit();
+//                if (intCount > firstNonZeroDigit) {
+//                    resDigits[intCount] ^= bitNumber;
+//                } else if (intCount < firstNonZeroDigit) {
+//                    resDigits[intCount] = -bitNumber;
+//                    for (i=intCount + 1; i < firstNonZeroDigit; i++) {
+//                        resDigits[i]=-1;
+//                    }
+//                    resDigits[i] = resDigits[i]--;
+//                } else {
+//                    i = intCount;
+//                    resDigits[i] = -((-resDigits[intCount]) ^ bitNumber);
+//                    if (resDigits[i] == 0) {
+//                        for (i++; resDigits[i] == -1 ; i++) {
+//                            resDigits[i] = 0;
+//                        }
+//                        resDigits[i]++;
+//                    }
+//                }
+//            }
+//        } else {//case where val is positive
+//            resDigits[intCount] ^= bitNumber;
+//        }
+//        BigInteger result = new BigInteger(resSign, resLength, resDigits);
+//        result.cutOffLeadingZeroes();
+//        return result;
+//    }
 }

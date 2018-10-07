@@ -237,103 +237,103 @@ class Elementary {
         return res;
     }
 
-    /**
-     * Performs {@code op1 += op2}. {@code op1} must have enough place to store
-     * the result (i.e. {@code op1.bitLength() >= op2.bitLength()}). Both
-     * should be positive (i.e. {@code op1 >= op2}).
-     *
-     * @param op1 the input minuend, and the output result.
-     * @param op2 the addend
-     */
-    static void inplaceAdd(BigInteger op1, BigInteger op2) {
-        // PRE: op1 >= op2 > 0
-        add (op1.digits, op1.digits, op1.numberLength, op2.digits,
-                op2.numberLength);
-        op1.numberLength = Math.min (Math.max (op1.numberLength,
-                op2.numberLength) + 1, op1.digits.length);
-        op1.cutOffLeadingZeroes ();
-        op1.unCache();
-    }
+//    /**
+//     * Performs {@code op1 += op2}. {@code op1} must have enough place to store
+//     * the result (i.e. {@code op1.bitLength() >= op2.bitLength()}). Both
+//     * should be positive (i.e. {@code op1 >= op2}).
+//     *
+//     * @param op1 the input minuend, and the output result.
+//     * @param op2 the addend
+//     */
+//    static void inplaceAdd(BigInteger op1, BigInteger op2) {
+//        // PRE: op1 >= op2 > 0
+//        add (op1.digits, op1.digits, op1.numberLength, op2.digits,
+//                op2.numberLength);
+//        op1.numberLength = Math.min (Math.max (op1.numberLength,
+//                op2.numberLength) + 1, op1.digits.length);
+//        op1.cutOffLeadingZeroes ();
+//        op1.unCache();
+//    }
 
-    /**
-     * Adds an integer value to the array of integers remembering carry.
-     *
-     * @return a possible generated carry (0 or 1)
-     */
-    static int inplaceAdd(int a[], final int aSize, final int addend) {
-        long carry = addend & 0xFFFFFFFFL;
+//    /**
+//     * Adds an integer value to the array of integers remembering carry.
+//     *
+//     * @return a possible generated carry (0 or 1)
+//     */
+//    static int inplaceAdd(int a[], final int aSize, final int addend) {
+//        long carry = addend & 0xFFFFFFFFL;
+//
+//        for (int i = 0; (carry != 0) && (i < aSize); i++) {
+//            carry += a[i] & 0xFFFFFFFFL;
+//            a[i] = (int) carry;
+//            carry >>= 32;
+//        }
+//        return (int) carry;
+//    }
 
-        for (int i = 0; (carry != 0) && (i < aSize); i++) {
-            carry += a[i] & 0xFFFFFFFFL;
-            a[i] = (int) carry;
-            carry >>= 32;
-        }
-        return (int) carry;
-    }
+//    /**
+//     * Performs: {@code op1 += addend}. The number must to have place to hold a
+//     * possible carry.
+//     */
+//    static void inplaceAdd(BigInteger op1, final int addend) {
+//        int carry = inplaceAdd(op1.digits, op1.numberLength, addend);
+//        if (carry == 1) {
+//            op1.digits[op1.numberLength] = 1;
+//            op1.numberLength++;
+//        }
+//        op1.unCache();
+//    }
 
-    /**
-     * Performs: {@code op1 += addend}. The number must to have place to hold a
-     * possible carry.
-     */
-    static void inplaceAdd(BigInteger op1, final int addend) {
-        int carry = inplaceAdd(op1.digits, op1.numberLength, addend);
-        if (carry == 1) {
-            op1.digits[op1.numberLength] = 1;
-            op1.numberLength++;
-        }
-        op1.unCache();
-    }
+//    /**
+//     * Performs {@code op1 -= op2}. {@code op1} must have enough place to store
+//     * the result (i.e. {@code op1.bitLength() >= op2.bitLength()}). Both
+//     * should be positive (what implies that {@code op1 >= op2}).
+//     *
+//     * @param op1
+//     *            the input minuend, and the output result.
+//     * @param op2
+//     *            the subtrahend
+//     */
+//    static void inplaceSubtract(BigInteger op1, BigInteger op2) {
+//        // PRE: op1 >= op2 > 0
+//        subtract (op1.digits, op1.digits, op1.numberLength, op2.digits,
+//                op2.numberLength);
+//        op1.cutOffLeadingZeroes ();
+//        op1.unCache();
+//    }
 
-    /**
-     * Performs {@code op1 -= op2}. {@code op1} must have enough place to store
-     * the result (i.e. {@code op1.bitLength() >= op2.bitLength()}). Both
-     * should be positive (what implies that {@code op1 >= op2}).
-     *
-     * @param op1
-     *            the input minuend, and the output result.
-     * @param op2
-     *            the subtrahend
-     */
-    static void inplaceSubtract(BigInteger op1, BigInteger op2) {
-        // PRE: op1 >= op2 > 0
-        subtract (op1.digits, op1.digits, op1.numberLength, op2.digits,
-                op2.numberLength);
-        op1.cutOffLeadingZeroes ();
-        op1.unCache();
-    }
-
-    /**
-     * Performs {@code res = b - a}
-     */
-    private static void inverseSubtract(int res[], int a[], int aSize, int b[],
-                                        int bSize) {
-        int i;
-        long borrow = 0;
-        if (aSize < bSize) {
-            for (i = 0; i < aSize; i++) {
-                borrow += ( b[i] & 0xFFFFFFFFL ) - ( a[i] & 0xFFFFFFFFL );
-                res[i] = (int) borrow;
-                borrow >>= 32; // -1 or 0
-            }
-            for (; i < bSize; i++) {
-                borrow += b[i] & 0xFFFFFFFFL;
-                res[i] = (int) borrow;
-                borrow >>= 32; // -1 or 0
-            }
-        } else {
-            for (i = 0; i < bSize; i++) {
-                borrow += ( b[i] & 0xFFFFFFFFL ) - ( a[i] & 0xFFFFFFFFL );
-                res[i] = (int) borrow;
-                borrow >>= 32; // -1 or 0
-            }
-            for (; i < aSize; i++) {
-                borrow -= a[i] & 0xFFFFFFFFL;
-                res[i] = (int) borrow;
-                borrow >>= 32; // -1 or 0
-            }
-        }
-
-    }
+//    /**
+//     * Performs {@code res = b - a}
+//     */
+//    private static void inverseSubtract(int res[], int a[], int aSize, int b[],
+//                                        int bSize) {
+//        int i;
+//        long borrow = 0;
+//        if (aSize < bSize) {
+//            for (i = 0; i < aSize; i++) {
+//                borrow += ( b[i] & 0xFFFFFFFFL ) - ( a[i] & 0xFFFFFFFFL );
+//                res[i] = (int) borrow;
+//                borrow >>= 32; // -1 or 0
+//            }
+//            for (; i < bSize; i++) {
+//                borrow += b[i] & 0xFFFFFFFFL;
+//                res[i] = (int) borrow;
+//                borrow >>= 32; // -1 or 0
+//            }
+//        } else {
+//            for (i = 0; i < bSize; i++) {
+//                borrow += ( b[i] & 0xFFFFFFFFL ) - ( a[i] & 0xFFFFFFFFL );
+//                res[i] = (int) borrow;
+//                borrow >>= 32; // -1 or 0
+//            }
+//            for (; i < aSize; i++) {
+//                borrow -= a[i] & 0xFFFFFFFFL;
+//                res[i] = (int) borrow;
+//                borrow >>= 32; // -1 or 0
+//            }
+//        }
+//
+//    }
 
     /**
      * Subtracts the value represented by {@code b} from the value represented
@@ -349,91 +349,91 @@ class Elementary {
         return res;
     }
 
-    /**
-     * Same as
-     *
-     * @link #inplaceSubtract(BigInteger, BigInteger), but without the
-     *       restriction of non-positive values
-     * @param op1
-     *            should have enough space to save the result
-     * @param op2
-     */
-    static void completeInPlaceSubtract(BigInteger op1, BigInteger op2) {
-        int resultSign = op1.compareTo (op2);
-        if (op1.sign == 0) {
-            System.arraycopy (op2.digits, 0, op1.digits, 0, op2.numberLength);
-            op1.sign = -op2.sign;
-        } else if (op1.sign != op2.sign) {
-            add (op1.digits, op1.digits, op1.numberLength, op2.digits,
-                    op2.numberLength);
-            op1.sign = resultSign;
-        } else {
-            int sign = unsignedArraysCompare (op1.digits,
-                    op2.digits, op1.numberLength, op2.numberLength);
-            if (sign > 0) {
-                subtract (op1.digits, op1.digits, op1.numberLength, op2.digits,
-                        op2.numberLength);	// op1 = op1 - op2
-                // op1.sign remains equal
-            } else {
-                inverseSubtract (op1.digits, op1.digits, op1.numberLength,
-                        op2.digits, op2.numberLength);	// op1 = op2 - op1
-                op1.sign = -op1.sign;
-            }
-        }
-        op1.numberLength = Math.max (op1.numberLength, op2.numberLength) + 1;
-        op1.cutOffLeadingZeroes ();
-        op1.unCache();
-    }
+//    /**
+//     * Same as
+//     *
+//     * @link #inplaceSubtract(BigInteger, BigInteger), but without the
+//     *       restriction of non-positive values
+//     * @param op1
+//     *            should have enough space to save the result
+//     * @param op2
+//     */
+//    static void completeInPlaceSubtract(BigInteger op1, BigInteger op2) {
+//        int resultSign = op1.compareTo (op2);
+//        if (op1.sign == 0) {
+//            System.arraycopy (op2.digits, 0, op1.digits, 0, op2.numberLength);
+//            op1.sign = -op2.sign;
+//        } else if (op1.sign != op2.sign) {
+//            add (op1.digits, op1.digits, op1.numberLength, op2.digits,
+//                    op2.numberLength);
+//            op1.sign = resultSign;
+//        } else {
+//            int sign = unsignedArraysCompare (op1.digits,
+//                    op2.digits, op1.numberLength, op2.numberLength);
+//            if (sign > 0) {
+//                subtract (op1.digits, op1.digits, op1.numberLength, op2.digits,
+//                        op2.numberLength);	// op1 = op1 - op2
+//                // op1.sign remains equal
+//            } else {
+//                inverseSubtract (op1.digits, op1.digits, op1.numberLength,
+//                        op2.digits, op2.numberLength);	// op1 = op2 - op1
+//                op1.sign = -op1.sign;
+//            }
+//        }
+//        op1.numberLength = Math.max (op1.numberLength, op2.numberLength) + 1;
+//        op1.cutOffLeadingZeroes ();
+//        op1.unCache();
+//    }
 
-    /**
-     * Same as @link #inplaceAdd(BigInteger, BigInteger), but without the restriction of
-     *       non-positive values
-     * @param op1 any number
-     * @param op2 any number
-     */
-    static void completeInPlaceAdd(BigInteger op1, BigInteger op2) {
-        if (op1.sign == 0)
-            System.arraycopy (op2.digits, 0, op1.digits, 0, op2.numberLength);
-        else if (op2.sign == 0)
-            return;
-        else if (op1.sign == op2.sign)
-            add (op1.digits, op1.digits, op1.numberLength, op2.digits,
-                    op2.numberLength);
-        else {
-            int sign = unsignedArraysCompare(op1.digits,
-                    op2.digits, op1.numberLength, op2.numberLength);
-            if (sign > 0)
-                subtract (op1.digits, op1.digits, op1.numberLength, op2.digits,
-                        op2.numberLength);
-            else {
-                inverseSubtract (op1.digits, op1.digits, op1.numberLength,
-                        op2.digits, op2.numberLength);
-                op1.sign = -op1.sign;
-            }
-        }
-        op1.numberLength = Math.max (op1.numberLength, op2.numberLength) + 1;
-        op1.cutOffLeadingZeroes ();
-        op1.unCache();
-    }
+//    /**
+//     * Same as @link #inplaceAdd(BigInteger, BigInteger), but without the restriction of
+//     *       non-positive values
+//     * @param op1 any number
+//     * @param op2 any number
+//     */
+//    static void completeInPlaceAdd(BigInteger op1, BigInteger op2) {
+//        if (op1.sign == 0)
+//            System.arraycopy (op2.digits, 0, op1.digits, 0, op2.numberLength);
+//        else if (op2.sign == 0)
+//            return;
+//        else if (op1.sign == op2.sign)
+//            add (op1.digits, op1.digits, op1.numberLength, op2.digits,
+//                    op2.numberLength);
+//        else {
+//            int sign = unsignedArraysCompare(op1.digits,
+//                    op2.digits, op1.numberLength, op2.numberLength);
+//            if (sign > 0)
+//                subtract (op1.digits, op1.digits, op1.numberLength, op2.digits,
+//                        op2.numberLength);
+//            else {
+//                inverseSubtract (op1.digits, op1.digits, op1.numberLength,
+//                        op2.digits, op2.numberLength);
+//                op1.sign = -op1.sign;
+//            }
+//        }
+//        op1.numberLength = Math.max (op1.numberLength, op2.numberLength) + 1;
+//        op1.cutOffLeadingZeroes ();
+//        op1.unCache();
+//    }
 
-    /**
-     * Compares two arrays, representing unsigned integer in little-endian order.
-     * Returns +1,0,-1 if a is - respective - greater, equal or lesser then b
-     */
-    private static int unsignedArraysCompare(int[] a, int[] b, int aSize, int bSize){
-        if (aSize > bSize)
-            return 1;
-        else if (aSize < bSize)
-            return -1;
-
-        else {
-            int i;
-            for (i = aSize - 1; i >= 0 && a[i] == b[i]; i-- )
-                ;
-            return i < 0 ? BigInteger.EQUALS : (( a[i] & 0xFFFFFFFFL ) < (b[i] & 0xFFFFFFFFL ) ? BigInteger.LESS
-                    : BigInteger.GREATER) ;
-        }
-    }
+//    /**
+//     * Compares two arrays, representing unsigned integer in little-endian order.
+//     * Returns +1,0,-1 if a is - respective - greater, equal or lesser then b
+//     */
+//    private static int unsignedArraysCompare(int[] a, int[] b, int aSize, int bSize){
+//        if (aSize > bSize)
+//            return 1;
+//        else if (aSize < bSize)
+//            return -1;
+//
+//        else {
+//            int i;
+//            for (i = aSize - 1; i >= 0 && a[i] == b[i]; i-- )
+//                ;
+//            return i < 0 ? BigInteger.EQUALS : (( a[i] & 0xFFFFFFFFL ) < (b[i] & 0xFFFFFFFFL ) ? BigInteger.LESS
+//                    : BigInteger.GREATER) ;
+//        }
+//    }
 
 
 }

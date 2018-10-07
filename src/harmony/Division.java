@@ -367,204 +367,204 @@ class Division {
         return (int)(carry1 >> 32); // -1 or 0
     }
 
-    /**
-     * @param m a positive modulus
-     * Return the greatest common divisor of op1 and op2,
-     *
-     * @param op1
-     *            must be greater than zero
-     * @param op2
-     *            must be greater than zero
-     * @see BigInteger#gcd(BigInteger)
-     * @return {@code GCD(op1, op2)}
-     */
-    static BigInteger gcdBinary(BigInteger op1, BigInteger op2) {
-        // PRE: (op1 > 0) and (op2 > 0)
+//    /**
+//     * @param m a positive modulus
+//     * Return the greatest common divisor of op1 and op2,
+//     *
+//     * @param op1
+//     *            must be greater than zero
+//     * @param op2
+//     *            must be greater than zero
+//     * @see BigInteger#gcd(BigInteger)
+//     * @return {@code GCD(op1, op2)}
+//     */
+//    static BigInteger gcdBinary(BigInteger op1, BigInteger op2) {
+//        // PRE: (op1 > 0) and (op2 > 0)
+//
+//        /*
+//         * Divide both number the maximal possible times by 2 without rounding
+//         * gcd(2*a, 2*b) = 2 * gcd(a,b)
+//         */
+//        int lsb1 = op1.getLowestSetBit();
+//        int lsb2 = op2.getLowestSetBit();
+//        int pow2Count = Math.min(lsb1, lsb2);
+//
+//        BitLevel.inplaceShiftRight(op1, lsb1);
+//        BitLevel.inplaceShiftRight(op2, lsb2);
+//
+//        BigInteger swap;
+//        // I want op2 > op1
+//        if (op1.compareTo(op2) == BigInteger.GREATER) {
+//            swap = op1;
+//            op1 = op2;
+//            op2 = swap;
+//        }
+//
+//        do { // INV: op2 >= op1 && both are odd unless op1 = 0
+//
+//            // Optimization for small operands
+//            // (op2.bitLength() < 64) implies by INV (op1.bitLength() < 64)
+//            if (( op2.numberLength == 1 )
+//                    || ( ( op2.numberLength == 2 ) && ( op2.digits[1] > 0 ) )) {
+//                op2 = BigInteger.valueOf(Division.gcdBinary(op1.longValue(),
+//                        op2.longValue()));
+//                break;
+//            }
+//
+//            // Implements one step of the Euclidean algorithm
+//            // To reduce one operand if it's much smaller than the other one
+//            if (op2.numberLength > op1.numberLength * 1.2) {
+//                op2 = op2.remainder(op1);
+//                if (op2.signum() != 0) {
+//                    BitLevel.inplaceShiftRight(op2, op2.getLowestSetBit());
+//                }
+//            } else {
+//
+//                // Use Knuth's algorithm of successive subtract and shifting
+//                do {
+//                    Elementary.inplaceSubtract(op2, op1); // both are odd
+//                    BitLevel.inplaceShiftRight(op2, op2.getLowestSetBit()); // op2 is even
+//                } while (op2.compareTo(op1) >= BigInteger.EQUALS);
+//            }
+//            // now op1 >= op2
+//            swap = op2;
+//            op2 = op1;
+//            op1 = swap;
+//        } while (op1.sign != 0);
+//        return op2.shiftLeft(pow2Count);
+//    }
 
-        /*
-         * Divide both number the maximal possible times by 2 without rounding
-         * gcd(2*a, 2*b) = 2 * gcd(a,b)
-         */
-        int lsb1 = op1.getLowestSetBit();
-        int lsb2 = op2.getLowestSetBit();
-        int pow2Count = Math.min(lsb1, lsb2);
-
-        BitLevel.inplaceShiftRight(op1, lsb1);
-        BitLevel.inplaceShiftRight(op2, lsb2);
-
-        BigInteger swap;
-        // I want op2 > op1
-        if (op1.compareTo(op2) == BigInteger.GREATER) {
-            swap = op1;
-            op1 = op2;
-            op2 = swap;
-        }
-
-        do { // INV: op2 >= op1 && both are odd unless op1 = 0
-
-            // Optimization for small operands
-            // (op2.bitLength() < 64) implies by INV (op1.bitLength() < 64)
-            if (( op2.numberLength == 1 )
-                    || ( ( op2.numberLength == 2 ) && ( op2.digits[1] > 0 ) )) {
-                op2 = BigInteger.valueOf(Division.gcdBinary(op1.longValue(),
-                        op2.longValue()));
-                break;
-            }
-
-            // Implements one step of the Euclidean algorithm
-            // To reduce one operand if it's much smaller than the other one
-            if (op2.numberLength > op1.numberLength * 1.2) {
-                op2 = op2.remainder(op1);
-                if (op2.signum() != 0) {
-                    BitLevel.inplaceShiftRight(op2, op2.getLowestSetBit());
-                }
-            } else {
-
-                // Use Knuth's algorithm of successive subtract and shifting
-                do {
-                    Elementary.inplaceSubtract(op2, op1); // both are odd
-                    BitLevel.inplaceShiftRight(op2, op2.getLowestSetBit()); // op2 is even
-                } while (op2.compareTo(op1) >= BigInteger.EQUALS);
-            }
-            // now op1 >= op2
-            swap = op2;
-            op2 = op1;
-            op1 = swap;
-        } while (op1.sign != 0);
-        return op2.shiftLeft(pow2Count);
-    }
-
-    /**
-     * Performs the same as {@link #gcdBinary(BigInteger, BigInteger)}, but
-     * with numbers of 63 bits, represented in positives values of {@code long}
-     * type.
-     *
-     * @param op1
-     *            a positive number
-     * @param op2
-     *            a positive number
-     * @see #gcdBinary(BigInteger, BigInteger)
-     * @return <code>GCD(op1, op2)</code>
-     */
-    static long gcdBinary(long op1, long op2) {
-        // PRE: (op1 > 0) and (op2 > 0)
-        int lsb1 = Long.numberOfTrailingZeros(op1);
-        int lsb2 = Long.numberOfTrailingZeros(op2);
-        int pow2Count = Math.min(lsb1, lsb2);
-
-        if (lsb1 != 0) {
-            op1 >>>= lsb1;
-        }
-        if (lsb2 != 0) {
-            op2 >>>= lsb2;
-        }
-        do {
-            if (op1 >= op2) {
-                op1 -= op2;
-                op1 >>>= Long.numberOfTrailingZeros(op1);
-            } else {
-                op2 -= op1;
-                op2 >>>= Long.numberOfTrailingZeros(op2);
-            }
-        } while (op1 != 0);
-        return ( op2 << pow2Count );
-    }
-
-
+//    /**
+//     * Performs the same as {@link #gcdBinary(BigInteger, BigInteger)}, but
+//     * with numbers of 63 bits, represented in positives values of {@code long}
+//     * type.
+//     *
+//     * @param op1
+//     *            a positive number
+//     * @param op2
+//     *            a positive number
+//     * @see #gcdBinary(BigInteger, BigInteger)
+//     * @return <code>GCD(op1, op2)</code>
+//     */
+//    static long gcdBinary(long op1, long op2) {
+//        // PRE: (op1 > 0) and (op2 > 0)
+//        int lsb1 = Long.numberOfTrailingZeros(op1);
+//        int lsb2 = Long.numberOfTrailingZeros(op2);
+//        int pow2Count = Math.min(lsb1, lsb2);
+//
+//        if (lsb1 != 0) {
+//            op1 >>>= lsb1;
+//        }
+//        if (lsb2 != 0) {
+//            op2 >>>= lsb2;
+//        }
+//        do {
+//            if (op1 >= op2) {
+//                op1 -= op2;
+//                op1 >>>= Long.numberOfTrailingZeros(op1);
+//            } else {
+//                op2 -= op1;
+//                op2 >>>= Long.numberOfTrailingZeros(op2);
+//            }
+//        } while (op1 != 0);
+//        return ( op2 << pow2Count );
+//    }
 
 
-    /**
-     * Calculates a.modInverse(p) Based on: Savas, E; Koc, C "The Montgomery Modular
-     * Inverse - Revised"
-     */
-    static BigInteger modInverseMontgomery(BigInteger a, BigInteger p) {
-
-        if (a.sign == 0){
-            // ZERO hasn't inverse
-            // math.19: BigInteger not invertible
-            throw new ArithmeticException(Messages.getString("math.19"));
-        }
 
 
-        if (!p.testBit(0)){
-            // montgomery inverse require even modulo
-            return modInverseHars(a, p);
-        }
-
-        int m = p.numberLength * 32;
-        // PRE: a \in [1, p - 1]
-        BigInteger u, v, r, s;
-        u = p.copy();  // make copy to use inplace method
-        v = a.copy();
-        int max = Math.max(v.numberLength, u.numberLength);
-        r = new BigInteger(1, 1, new int[max + 1]);
-        s = new BigInteger(1, 1, new int[max + 1]);
-        s.digits[0] = 1;
-        // s == 1 && v == 0
-
-        int k = 0;
-
-        int lsbu = u.getLowestSetBit();
-        int lsbv = v.getLowestSetBit();
-        int toShift;
-
-        if (lsbu > lsbv) {
-            BitLevel.inplaceShiftRight(u, lsbu);
-            BitLevel.inplaceShiftRight(v, lsbv);
-            BitLevel.inplaceShiftLeft(r, lsbv);
-            k += lsbu - lsbv;
-        } else {
-            BitLevel.inplaceShiftRight(u, lsbu);
-            BitLevel.inplaceShiftRight(v, lsbv);
-            BitLevel.inplaceShiftLeft(s, lsbu);
-            k += lsbv - lsbu;
-        }
-
-        r.sign = 1;
-        while (v.signum() > 0) {
-            // INV v >= 0, u >= 0, v odd, u odd (except last iteration when v is even (0))
-
-            while (u.compareTo(v) > BigInteger.EQUALS) {
-                Elementary.inplaceSubtract(u, v);
-                toShift = u.getLowestSetBit();
-                BitLevel.inplaceShiftRight(u, toShift);
-                Elementary.inplaceAdd(r, s);
-                BitLevel.inplaceShiftLeft(s, toShift);
-                k += toShift;
-            }
-
-            while (u.compareTo(v) <= BigInteger.EQUALS) {
-                Elementary.inplaceSubtract(v, u);
-                if (v.signum() == 0)
-                    break;
-                toShift = v.getLowestSetBit();
-                BitLevel.inplaceShiftRight(v, toShift);
-                Elementary.inplaceAdd(s, r);
-                BitLevel.inplaceShiftLeft(r, toShift);
-                k += toShift;
-            }
-        }
-        if (!u.isOne()){
-            // in u is stored the gcd
-            // math.19: BigInteger not invertible.
-            throw new ArithmeticException(Messages.getString("math.19"));
-        }
-        if (r.compareTo(p) >= BigInteger.EQUALS) {
-            Elementary.inplaceSubtract(r, p);
-        }
-
-        r = p.subtract(r);
-
-        // Have pair: ((BigInteger)r, (Integer)k) where r == a^(-1) * 2^k mod (module)		
-        int n1 = calcN(p);
-        if (k > m) {
-            r = monPro(r, BigInteger.ONE, p, n1);
-            k = k - m;
-        }
-
-        r = monPro(r, BigInteger.getPowerOfTwo(m - k), p, n1);
-        return r;
-    }
+//    /**
+//     * Calculates a.modInverse(p) Based on: Savas, E; Koc, C "The Montgomery Modular
+//     * Inverse - Revised"
+//     */
+//    static BigInteger modInverseMontgomery(BigInteger a, BigInteger p) {
+//
+//        if (a.sign == 0){
+//            // ZERO hasn't inverse
+//            // math.19: BigInteger not invertible
+//            throw new ArithmeticException(Messages.getString("math.19"));
+//        }
+//
+//
+//        if (!p.testBit(0)){
+//            // montgomery inverse require even modulo
+//            return modInverseHars(a, p);
+//        }
+//
+//        int m = p.numberLength * 32;
+//        // PRE: a \in [1, p - 1]
+//        BigInteger u, v, r, s;
+//        u = p.copy();  // make copy to use inplace method
+//        v = a.copy();
+//        int max = Math.max(v.numberLength, u.numberLength);
+//        r = new BigInteger(1, 1, new int[max + 1]);
+//        s = new BigInteger(1, 1, new int[max + 1]);
+//        s.digits[0] = 1;
+//        // s == 1 && v == 0
+//
+//        int k = 0;
+//
+//        int lsbu = u.getLowestSetBit();
+//        int lsbv = v.getLowestSetBit();
+//        int toShift;
+//
+//        if (lsbu > lsbv) {
+//            BitLevel.inplaceShiftRight(u, lsbu);
+//            BitLevel.inplaceShiftRight(v, lsbv);
+//            BitLevel.inplaceShiftLeft(r, lsbv);
+//            k += lsbu - lsbv;
+//        } else {
+//            BitLevel.inplaceShiftRight(u, lsbu);
+//            BitLevel.inplaceShiftRight(v, lsbv);
+//            BitLevel.inplaceShiftLeft(s, lsbu);
+//            k += lsbv - lsbu;
+//        }
+//
+//        r.sign = 1;
+//        while (v.signum() > 0) {
+//            // INV v >= 0, u >= 0, v odd, u odd (except last iteration when v is even (0))
+//
+//            while (u.compareTo(v) > BigInteger.EQUALS) {
+//                Elementary.inplaceSubtract(u, v);
+//                toShift = u.getLowestSetBit();
+//                BitLevel.inplaceShiftRight(u, toShift);
+//                Elementary.inplaceAdd(r, s);
+//                BitLevel.inplaceShiftLeft(s, toShift);
+//                k += toShift;
+//            }
+//
+//            while (u.compareTo(v) <= BigInteger.EQUALS) {
+//                Elementary.inplaceSubtract(v, u);
+//                if (v.signum() == 0)
+//                    break;
+//                toShift = v.getLowestSetBit();
+//                BitLevel.inplaceShiftRight(v, toShift);
+//                Elementary.inplaceAdd(s, r);
+//                BitLevel.inplaceShiftLeft(r, toShift);
+//                k += toShift;
+//            }
+//        }
+//        if (!u.isOne()){
+//            // in u is stored the gcd
+//            // math.19: BigInteger not invertible.
+//            throw new ArithmeticException(Messages.getString("math.19"));
+//        }
+//        if (r.compareTo(p) >= BigInteger.EQUALS) {
+//            Elementary.inplaceSubtract(r, p);
+//        }
+//
+//        r = p.subtract(r);
+//
+//        // Have pair: ((BigInteger)r, (Integer)k) where r == a^(-1) * 2^k mod (module)
+//        int n1 = calcN(p);
+//        if (k > m) {
+//            r = monPro(r, BigInteger.ONE, p, n1);
+//            k = k - m;
+//        }
+//
+//        r = monPro(r, BigInteger.getPowerOfTwo(m - k), p, n1);
+//        return r;
+//    }
 
     /**
      * Calculate the first digit of the inverse
@@ -744,73 +744,73 @@ class Division {
         return monPro(res, BigInteger.ONE, modulus, n2);
     }
 
-    /**
-     * Performs modular exponentiation using the Montgomery Reduction. It
-     * requires that all parameters be positive and the modulus be even. Based
-     * <i>The square and multiply algorithm and the Montgomery Reduction C. K.
-     * Koc - Montgomery Reduction with Even Modulus</i>. The square and
-     * multiply algorithm and the Montgomery Reduction.
-     *
-     * @ar.org.fitc.ref "C. K. Koc - Montgomery Reduction with Even Modulus"
-     * @see BigInteger#modPow(BigInteger, BigInteger)
-     */
-    static BigInteger evenModPow(BigInteger base, BigInteger exponent,
-                                 BigInteger modulus) {
-        // PRE: (base > 0), (exponent > 0), (modulus > 0) and (modulus even)
-        // STEP 1: Obtain the factorization 'modulus'= q * 2^j.
-        int j = modulus.getLowestSetBit();
-        BigInteger q = modulus.shiftRight(j);
+//    /**
+//     * Performs modular exponentiation using the Montgomery Reduction. It
+//     * requires that all parameters be positive and the modulus be even. Based
+//     * <i>The square and multiply algorithm and the Montgomery Reduction C. K.
+//     * Koc - Montgomery Reduction with Even Modulus</i>. The square and
+//     * multiply algorithm and the Montgomery Reduction.
+//     *
+//     * @ar.org.fitc.ref "C. K. Koc - Montgomery Reduction with Even Modulus"
+//     * @see BigInteger#modPow(BigInteger, BigInteger)
+//     */
+//    static BigInteger evenModPow(BigInteger base, BigInteger exponent,
+//                                 BigInteger modulus) {
+//        // PRE: (base > 0), (exponent > 0), (modulus > 0) and (modulus even)
+//        // STEP 1: Obtain the factorization 'modulus'= q * 2^j.
+//        int j = modulus.getLowestSetBit();
+//        BigInteger q = modulus.shiftRight(j);
+//
+//        // STEP 2: Compute x1 := base^exponent (mod q).
+//        BigInteger x1 = oddModPow(base, exponent, q);
+//
+//        // STEP 3: Compute x2 := base^exponent (mod 2^j).
+//        BigInteger x2 = pow2ModPow(base, exponent, j);
+//
+//        // STEP 4: Compute q^(-1) (mod 2^j) and y := (x2-x1) * q^(-1) (mod 2^j)
+//        BigInteger qInv = modPow2Inverse(q, j);
+//        BigInteger y = (x2.subtract(x1)).multiply(qInv);
+//        inplaceModPow2(y, j);
+//        if (y.sign < 0) {
+//            y = y.add(BigInteger.getPowerOfTwo(j));
+//        }
+//        // STEP 5: Compute and return: x1 + q * y
+//        return x1.add(q.multiply(y));
+//    }
 
-        // STEP 2: Compute x1 := base^exponent (mod q).
-        BigInteger x1 = oddModPow(base, exponent, q);
-
-        // STEP 3: Compute x2 := base^exponent (mod 2^j).
-        BigInteger x2 = pow2ModPow(base, exponent, j);
-
-        // STEP 4: Compute q^(-1) (mod 2^j) and y := (x2-x1) * q^(-1) (mod 2^j)
-        BigInteger qInv = modPow2Inverse(q, j);
-        BigInteger y = (x2.subtract(x1)).multiply(qInv);
-        inplaceModPow2(y, j);
-        if (y.sign < 0) {
-            y = y.add(BigInteger.getPowerOfTwo(j));
-        }
-        // STEP 5: Compute and return: x1 + q * y
-        return x1.add(q.multiply(y));
-    }
-
-    /**
-     * It requires that all parameters be positive.
-     *
-     * @return {@code base<sup>exponent</sup> mod (2<sup>j</sup>)}.
-     * @see BigInteger#modPow(BigInteger, BigInteger)
-     */
-    static BigInteger pow2ModPow(BigInteger base, BigInteger exponent, int j) {
-        // PRE: (base > 0), (exponent > 0) and (j > 0)
-        BigInteger res = BigInteger.ONE;
-        BigInteger e = exponent.copy();
-        BigInteger baseMod2toN = base.copy();
-        BigInteger res2;
-        /*
-         * If 'base' is odd then it's coprime with 2^j and phi(2^j) = 2^(j-1);
-         * so we can reduce reduce the exponent (mod 2^(j-1)).
-         */
-        if (base.testBit(0)) {
-            inplaceModPow2(e, j - 1);
-        }
-        inplaceModPow2(baseMod2toN, j);
-
-        for (int i = e.bitLength() - 1; i >= 0; i--) {
-            res2 = res.copy();
-            inplaceModPow2(res2, j);
-            res = res.multiply(res2);
-            if (BitLevel.testBit(e, i)) {
-                res = res.multiply(baseMod2toN);
-                inplaceModPow2(res, j);
-            }
-        }
-        inplaceModPow2(res, j);
-        return res;
-    }
+//    /**
+//     * It requires that all parameters be positive.
+//     *
+//     * @return {@code base<sup>exponent</sup> mod (2<sup>j</sup>)}.
+//     * @see BigInteger#modPow(BigInteger, BigInteger)
+//     */
+//    static BigInteger pow2ModPow(BigInteger base, BigInteger exponent, int j) {
+//        // PRE: (base > 0), (exponent > 0) and (j > 0)
+//        BigInteger res = BigInteger.ONE;
+//        BigInteger e = exponent.copy();
+//        BigInteger baseMod2toN = base.copy();
+//        BigInteger res2;
+//        /*
+//         * If 'base' is odd then it's coprime with 2^j and phi(2^j) = 2^(j-1);
+//         * so we can reduce reduce the exponent (mod 2^(j-1)).
+//         */
+//        if (base.testBit(0)) {
+//            inplaceModPow2(e, j - 1);
+//        }
+//        inplaceModPow2(baseMod2toN, j);
+//
+//        for (int i = e.bitLength() - 1; i >= 0; i--) {
+//            res2 = res.copy();
+//            inplaceModPow2(res2, j);
+//            res = res.multiply(res2);
+//            if (BitLevel.testBit(e, i)) {
+//                res = res.multiply(baseMod2toN);
+//                inplaceModPow2(res, j);
+//            }
+//        }
+//        inplaceModPow2(res, j);
+//        return res;
+//    }
 
     private static void monReduction(int[] res, BigInteger modulus, int n2) {
 
@@ -852,7 +852,7 @@ class Division {
      * @param n2 The digit modulus'[0].
      * @ar.org.fitc.ref "C. K. Koc - Analyzing and Comparing Montgomery
      *                  Multiplication Algorithms"
-     * @see #modPowOdd(BigInteger, BigInteger, BigInteger)
+//     * @see #modPowOdd(BigInteger, BigInteger, BigInteger)
      */
     static BigInteger monPro(BigInteger a, BigInteger b, BigInteger modulus, int n2) {
         int modulusLen = modulus.numberLength;
@@ -864,11 +864,11 @@ class Division {
 
     }
 
-    /**
-     * Performs the final reduction of the Montgomery algorithm.
-     * @see monPro(BigInteger, BigInteger, BigInteger, long)
-     * @see monSquare(BigInteger, BigInteger, long)
-     */
+//    /**
+//     * Performs the final reduction of the Montgomery algorithm.
+//     * @see monPro(BigInteger, BigInteger, BigInteger, long)
+//     * @see monSquare(BigInteger, BigInteger, long)
+//     */
     static BigInteger finalSubtraction(int res[], BigInteger modulus){
 
         // skipping leading zeros
@@ -889,7 +889,7 @@ class Division {
 
         // if (res >= modulusDigits) compute (res - modulusDigits)
         if (doSub) {
-            Elementary.inplaceSubtract(result, modulus);
+//            Elementary.inplaceSubtract(result, modulus);
         }
 
         result.cutOffLeadingZeroes();
