@@ -304,39 +304,7 @@ class Multiplication {
     static int multiplyByInt(int a[], final int aSize, final int factor) {
         return multiplyByInt(a, a, aSize, factor);
     }
-
-    /**
-     * Multiplies a number by a positive integer.
-     * @param val an arbitrary {@code BigInteger}
-     * @param factor a positive {@code int} number
-     * @return {@code val * factor}
-     */
-    static BigInteger multiplyByPositiveInt(BigInteger val, int factor) {
-        int resSign = val.sign;
-        if (resSign == 0) {
-            return BigInteger.ZERO;
-        }
-        int aNumberLength = val.numberLength;
-        int[] aDigits = val.digits;
-
-        if (aNumberLength == 1) {
-            long res = unsignedMultAddAdd(aDigits[0], factor, 0, 0);
-            int resLo = (int)res;
-            int resHi = (int)(res >>> 32);
-            return ((resHi == 0)
-                    ? new BigInteger(resSign, resLo)
-                    : new BigInteger(resSign, 2, new int[]{resLo, resHi}));
-        }
-        // Common case
-        int resLength = aNumberLength + 1;
-        int resDigits[] = new int[resLength];
-
-        resDigits[aNumberLength] = multiplyByInt(resDigits, aDigits, aNumberLength, factor);
-        BigInteger result = new BigInteger(resSign, resLength, resDigits);
-        result.cutOffLeadingZeroes();
-        return result;
-    }
-
+    
     /**
      *  Performs a<sup>2</sup>
      *  @param a The number to square.
