@@ -465,59 +465,6 @@ public class BigInteger extends Number implements Comparable<BigInteger>,
 
     /** @see BigInteger#BigInteger(String, int) */
     private static void setFromString(BigInteger bi, String val, int radix) {
-        int sign;
-        int[] digits;
-        int numberLength;
-        int stringLength = val.length();
-        int startChar;
-        int endChar = stringLength;
-
-        if (val.charAt(0) == '-') {
-            sign = -1;
-            startChar = 1;
-            stringLength--;
-        } else {
-            sign = 1;
-            startChar = 0;
-        }
-        /*
-         * We use the following algorithm: split a string into portions of n
-         * characters and convert each portion to an integer according to the
-         * radix. Then convert an exp(radix, n) based number to binary using the
-         * multiplication method. See D. Knuth, The Art of Computer Programming,
-         * vol. 2.
-         */
-
-        int charsPerInt = Conversion.digitFitInInt[radix];
-        int bigRadixDigitsLength = stringLength / charsPerInt;
-        int topChars = stringLength % charsPerInt;
-
-        if (topChars != 0) {
-            bigRadixDigitsLength++;
-        }
-        digits = new int[bigRadixDigitsLength];
-        // Get the maximal power of radix that fits in int
-        int bigRadix = Conversion.bigRadices[radix - 2];
-        // Parse an input string and accumulate the BigInteger's magnitude
-        int digitIndex = 0; // index of digits array
-        int substrEnd = startChar + ((topChars == 0) ? charsPerInt : topChars);
-        int newDigit;
-
-        for (int substrStart = startChar; substrStart < endChar; substrStart = substrEnd, substrEnd = substrStart
-                + charsPerInt) {
-            int bigRadixDigit = Integer.parseInt(val.substring(substrStart,
-                    substrEnd), radix);
-            newDigit = Multiplication.multiplyByInt(digits, digitIndex,
-                    bigRadix);
-            newDigit += Elementary
-                    .inplaceAdd(digits, digitIndex, bigRadixDigit);
-            digits[digitIndex++] = newDigit;
-        }
-        numberLength = digitIndex;
-        bi.sign = sign;
-        bi.numberLength = numberLength;
-        bi.digits = digits;
-        bi.cutOffLeadingZeroes();
     }
 
     /**
@@ -824,20 +771,9 @@ public class BigInteger extends Number implements Comparable<BigInteger>,
         return (float) doubleValue();
     }
 
-    /**
-     * Returns this {@code BigInteger} as an double value. If {@code this} is
-     * too big to be represented as an double, then {@code
-     * Double.POSITIVE_INFINITY} or {@code Double.NEGATIVE_INFINITY} is
-     * returned. Note, that not all integers x in the range [-Double.MAX_VALUE,
-     * Double.MAX_VALUE] can be represented as a double. The double
-     * representation has a mantissa of length 53. For example, 2^53+1 =
-     * 9007199254740993 is returned as double 9007199254740992.0.
-     *
-     * @return this {@code BigInteger} as a double value
-     */
     @Override
     public double doubleValue() {
-        return Conversion.bigInteger2Double(this);
+        throw new UnsupportedOperationException();
     }
 
     /**
@@ -950,7 +886,7 @@ public class BigInteger extends Number implements Comparable<BigInteger>,
      */
     @Override
     public String toString() {
-        return Conversion.toDecimalScaledString(this, 0);
+        return "?";
     }
 
     /**
@@ -965,7 +901,7 @@ public class BigInteger extends Number implements Comparable<BigInteger>,
      * @return a string representation of this with radix 10.
      */
     public String toString(int radix) {
-        return Conversion.bigInteger2String(this, radix);
+        return "?";
     }
 
     /**
