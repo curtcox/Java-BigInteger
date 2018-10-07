@@ -877,7 +877,7 @@ public class BigInteger extends Number implements Comparable<BigInteger>,
         }
         return i < 0;
     }
-    
+
     /**
      * Returns a new {@code BigInteger} whose value is greatest common divisor
      * of {@code this} and {@code val}. If {@code this==0} and {@code val==0}
@@ -1107,47 +1107,6 @@ public class BigInteger extends Number implements Comparable<BigInteger>,
     }
 
     /**
-     * Returns a new {@code BigInteger} whose value is {@code 1/this mod m}. The
-     * modulus {@code m} must be positive. The result is guaranteed to be in the
-     * interval {@code [0, m)} (0 inclusive, m exclusive). If {@code this} is
-     * not relatively prime to m, then an exception is thrown.
-     *
-     * @param m
-     *            the modulus.
-     * @return {@code 1/this mod m}.
-     * @throws NullPointerException
-     *             if {@code m == null}
-     * @throws ArithmeticException
-     *             if {@code m < 0 or} if {@code this} is not relatively prime
-     *             to {@code m}
-     */
-    public BigInteger modInverse(BigInteger m) {
-        if (m.sign <= 0) {
-            // math.18=BigInteger: modulus not positive
-            throw new ArithmeticException(Messages.getString("math.18")); //$NON-NLS-1$
-        }
-        // If both are even, no inverse exists
-        if (!(testBit(0) || m.testBit(0))) {
-            // math.19=BigInteger not invertible.
-            throw new ArithmeticException(Messages.getString("math.19")); //$NON-NLS-1$
-        }
-        if (m.isOne()) {
-            return ZERO;
-        }
-
-        // From now on: (m > 1)
-        BigInteger res = Division.modInverseMontgomery(abs().mod(m), m);
-        if (res.sign == 0) {
-            // math.19=BigInteger not invertible.
-            throw new ArithmeticException(Messages.getString("math.19")); //$NON-NLS-1$
-        }
-
-        res = ((sign < 0) ? m.subtract(res) : res);
-        return res;
-
-    }
-
-    /**
      * Returns a new {@code BigInteger} whose value is {@code this^exponent mod
      * m}. The modulus {@code m} must be positive. The result is guaranteed to
      * be in the interval {@code [0, m)} (0 inclusive, m exclusive). If the
@@ -1178,10 +1137,6 @@ public class BigInteger extends Number implements Comparable<BigInteger>,
         }
         if (exponent.sign == 0) {
             return BigInteger.ONE.mod(m);
-        }
-        if (exponent.sign < 0) {
-            base = modInverse(m);
-            exponent = exponent.negate();
         }
         // From now on: (m > 0) and (exponent >= 0)
         BigInteger res = (m.testBit(0)) ? Division.oddModPow(base.abs(),
