@@ -464,28 +464,7 @@ class Division {
         result.cutOffLeadingZeroes();
         return result;
     }
-
-    /**
-     * @param x an odd positive number.
-     * @param n the exponent by which 2 is raised.
-     * @return {@code x<sup>-1</sup> (mod 2<sup>n</sup>)}.
-     */
-    static BigInteger modPow2Inverse(BigInteger x, int n) {
-        // PRE: (x > 0), (x is odd), and (n > 0)
-        BigInteger y = new BigInteger(1, new int[1 << n]);
-        y.numberLength = 1;
-        y.digits[0] = 1;
-        y.sign = 1;
-
-        for (int i = 1; i < n; i++) {
-            if (BitLevel.testBit(x.multiply(y), i)) {
-                // Adding 2^i to y (setting the i-th bit)
-                y.digits[i >> 5] |= (1 << (i & 31));
-            }
-        }
-        return y;
-    }
-
+    
     /**
      * Performs {@code x = x mod (2<sup>n</sup>)}.
      *
