@@ -26,36 +26,7 @@ class Multiplication {
      * Break point in digits (number of {@code int} elements)
      * between Karatsuba and Pencil and Paper multiply.
      */
-    static final int whenUseKaratsuba = 63; // an heuristic value
-
-    /**
-     * An array with the first powers of ten in {@code BigInteger} version.
-     * ({@code 10^0,10^1,...,10^31})
-     */
-    static final BigInteger[] bigTenPows = new BigInteger[32];
-
-    /**
-     * An array with the first powers of five in {@code BigInteger} version.
-     * ({@code 5^0,5^1,...,5^31})
-     */
-    static final BigInteger bigFivePows[] = new BigInteger[32];
-
-
-
-    static {
-        int i;
-        long fivePow = 1L;
-
-        for (i = 0; i <= 18; i++) {
-            bigFivePows[i] = BigInteger.valueOf(fivePow);
-            bigTenPows[i] = BigInteger.valueOf(fivePow << i);
-            fivePow *= 5;
-        }
-        for (; i < bigTenPows.length; i++) {
-            bigFivePows[i] = bigFivePows[i - 1].multiply(bigFivePows[1]);
-            bigTenPows[i] = bigTenPows[i - 1].multiply(BigInteger.TEN);
-        }
-    }
+    private static final int whenUseKaratsuba = 63; // an heuristic value
 
     /**
      * Performs a multiplication of two BigInteger and hides the algorithm used.
@@ -82,7 +53,6 @@ class Multiplication {
      * @see #multiply(BigInteger, BigInteger)
      */
     static BigInteger karatsuba(BigInteger op1, BigInteger op2) {
-        BigInteger temp;
         if (op2.numberLength > op1.numberLength) {
             throw new IllegalArgumentException();
         }
