@@ -105,9 +105,6 @@ public class BigInteger {
 
     private transient int firstNonzeroDigit = -2;
 
-    /** sign field, used for serialization. */
-    private int signum;
-
     /** Cache for the hash code. */
     private transient int hashCode = 0;
 
