@@ -7,6 +7,7 @@ class Benchmark {
 
     static final Random random = new SecureRandom();
     static final int certainty = 100;
+    static final int samples = 10000;
 
     public static void main(String[] args) {
         for (int i=1; i<10; i++) {
@@ -40,7 +41,7 @@ class Benchmark {
 
     static Times jdk(int bitLength) {
         Times times = new Times();
-        for (int i=0; i< 10000; i++) {
+        for (int i=0; i< samples; tick(i++)) {
             long t0 = now();
             java.math.BigInteger x = new java.math.BigInteger(bitLength,certainty,random);
             long t1 = now();
@@ -48,14 +49,20 @@ class Benchmark {
             long t2 = now();
             times.create += (t1 - t0);
             times.test += (t2 - t1);
-
         }
+        print("");
         return times;
+    }
+
+    static void tick(int i) {
+        if (i%(samples/100)==0) {
+            System.out.print(".");
+        }
     }
 
     static Times harmony(int bitLength) {
         Times times = new Times();
-        for (int i=0; i< 1000; i++) {
+        for (int i=0; i< samples; tick(i++)) {
             long t0 = now();
             BigInteger x = new BigInteger(bitLength,certainty,random);
             long t1 = now();
@@ -64,6 +71,7 @@ class Benchmark {
             times.create += (t1 - t0);
             times.test += (t2 - t1);
         }
+        print("");
         return times;
     }
 
