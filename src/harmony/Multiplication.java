@@ -106,9 +106,7 @@ class Multiplication {
     static BigInteger karatsuba(BigInteger op1, BigInteger op2) {
         BigInteger temp;
         if (op2.numberLength > op1.numberLength) {
-            temp = op1;
-            op1 = op2;
-            op2 = temp;
+            throw new IllegalArgumentException();
         }
         if (op2.numberLength < whenUseKaratsuba) {
             return multiplyPAP(op1, op2);
