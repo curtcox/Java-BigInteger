@@ -669,13 +669,7 @@ public class BigInteger {
     int getFirstNonzeroDigit() {
         if (firstNonzeroDigit == -2) {
             int i;
-            if (this.sign == 0) {
-                i = -1;
-            } else {
-                for (i = 0; digits[i] == 0; i++) {
-                    // Empty
-                }
-            }
+            for (i = 0; digits[i] == 0; i++) {}
             firstNonzeroDigit = i;
         }
         return firstNonzeroDigit;
@@ -686,9 +680,6 @@ public class BigInteger {
     }
 
     static BigInteger getPowerOfTwo(int exp) {
-        if(exp < TWO_POWS.length) {
-            return TWO_POWS[exp];
-        }
         int intCount = exp >> 5;
         int bitN = exp & 31;
         int resDigits[] = new int[intCount+1];
