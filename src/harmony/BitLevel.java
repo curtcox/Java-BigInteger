@@ -57,31 +57,6 @@ class BitLevel {
         return bLength;
     }
 
-    /** @see BigInteger#bitCount() */
-    static int bitCount(BigInteger val) {
-        int bCount = 0;
-
-        if (val.sign == 0) {
-            return 0;
-        }
-
-        int i = val.getFirstNonzeroDigit();;
-        if (val.sign > 0) {
-            for ( ; i < val.numberLength; i++) {
-                bCount += Integer.bitCount(val.digits[i]);
-            }
-        } else {// (sign < 0)
-            // this digit absorbs the carry
-            bCount += Integer.bitCount(-val.digits[i]);
-            for (i++; i < val.numberLength; i++) {
-                bCount += Integer.bitCount(~val.digits[i]);
-            }
-            // We take the complement sum:
-            bCount = (val.numberLength << 5) - bCount;
-        }
-        return bCount;
-    }
-
     /**
      * Performs a fast bit testing for positive numbers. The bit to to be tested
      * must be in the range {@code [0, val.bitLength()-1]}

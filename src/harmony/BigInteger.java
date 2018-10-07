@@ -649,26 +649,6 @@ public class BigInteger extends Number implements Comparable<BigInteger>,
     }
 
     /**
-     * Use {@code bitLength(0)} if you want to know the length of the binary
-     * value in bits.
-     * <p>
-     * Returns the number of bits in the binary representation of {@code this}
-     * which differ from the sign bit. If {@code this} is positive the result is
-     * equivalent to the number of bits set in the binary representation of
-     * {@code this}. If {@code this} is negative the result is equivalent to the
-     * number of bits set in the binary representation of {@code -this-1}.
-     * <p>
-     * <b>Implementation Note:</b> Usage of this method is not recommended as
-     * the current implementation is not efficient.
-     *
-     * @return number of bits in the binary representation of {@code this} which
-     *         differ from the sign bit
-     */
-    public int bitCount() {
-        return BitLevel.bitCount(this);
-    }
-
-    /**
      * Returns this {@code BigInteger} as an int value. If {@code this} is too
      * big to be represented as an int, then {@code this} % 2^32 is returned.
      *
