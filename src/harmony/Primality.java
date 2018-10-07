@@ -168,7 +168,18 @@ class Primality {
 
         for (int i = 0; i < t; i++) {
             // To generate a witness 'x', first it use the primes of table
-            x = BIprimes[i];
+            if (i < primes.length) {
+                x = BIprimes[i];
+            } else {
+            /*
+             * It generates random witness only if it's necesssary. Note
+             * that all methods would call Miller-Rabin with t <= 50 so
+             * this part is only to do more robust the algorithm
+             */
+                do {
+                    x = new BigInteger(bitLength, rnd);
+                } while ((x.compareTo(n) >= BigInteger.EQUALS) || (x.sign == 0) || x.isOne());
+            }
             y = x.modPow(q, n);
             if (y.isOne() || y.equals(n_minus_1)) {
                 continue;
