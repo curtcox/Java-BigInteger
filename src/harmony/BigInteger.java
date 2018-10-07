@@ -562,18 +562,8 @@ public class BigInteger {
         }
         BigInteger base = this;
 
-        if (m.isOne() | (exponent.sign > 0 & base.sign == 0)) {
-            return BigInteger.ZERO;
-        }
-        if (exponent.sign == 0) {
-            return BigInteger.ONE.mod(m);
-        }
         // From now on: (m > 0) and (exponent >= 0)
         BigInteger res = Division.oddModPow(base.abs(), exponent, m);
-        if ((base.sign < 0) && exponent.testBit(0)) {
-            // -b^e mod m == ((-1 mod m) * (b^e mod m)) mod m
-            res = m.subtract(BigInteger.ONE).multiply(res).mod(m);
-        }
         // else exponent is even, so base^exp is positive
         return res;
     }
