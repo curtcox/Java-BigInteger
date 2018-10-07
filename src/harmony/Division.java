@@ -301,76 +301,7 @@ class Division {
         }
         return res;
     }
-
-    /**
-     * Implements the "Shifting Euclidean modular inverse algorithm".
-     * "Laszlo Hars - Modular Inverse Algorithms Without Multiplications
-     * for Cryptographic Applications"
-     *
-     * @param a
-     *            a positive number
-     * @param m
-     *            a positive modulus
-     */
-    static BigInteger modInverseHars(BigInteger a, BigInteger m) {
-        // PRE: (a > 0) and (m > 0)
-        BigInteger u, v, r, s, temp;
-        // u = MAX(a,m), v = MIN(a,m)
-        if (a.compareTo(m) == BigInteger.LESS) {
-            u = m;
-            v = a;
-            r = BigInteger.ZERO;
-            s = BigInteger.ONE;
-        } else {
-            v = m;
-            u = a;
-            s = BigInteger.ZERO;
-            r = BigInteger.ONE;
-        }
-        int uLen = u.bitLength();
-        int vLen = v.bitLength();
-        int f = uLen - vLen;
-
-        while (vLen > 1) {
-            if (u.sign == v.sign) {
-                u = u.subtract(v.shiftLeft(f));
-                r = r.subtract(s.shiftLeft(f));
-            } else {
-                u = u.add(v.shiftLeft(f));
-                r = r.add(s.shiftLeft(f));
-            }
-            uLen = u.abs().bitLength();
-            vLen = v.abs().bitLength();
-            f = uLen - vLen;
-            if (f < 0) {
-                // SWAP(u,v)
-                temp = u;
-                u = v;
-                v = temp;
-                // SWAP(r,s)
-                temp = r;
-                r = s;
-                s = temp;
-
-                f = -f;
-                vLen = uLen;
-            }
-        }
-        if (v.sign == 0) {
-            return BigInteger.ZERO;
-        }
-        if (v.sign < 0) {
-            s = s.negate();
-        }
-        if (s.compareTo(m) == BigInteger.GREATER) {
-            return s.subtract(m);
-        }
-        if (s.sign < 0) {
-            return s.add(m);
-        }
-        return s; // a^(-1) mod m
-    }
-
+    
     /*Implements the Montgomery modular exponentiation based in <i>The sliding windows algorithm and the Mongomery
      *Reduction</i>.
      *@ar.org.fitc.ref "A. Menezes,P. van Oorschot, S. Vanstone - Handbook of Applied Cryptography";
