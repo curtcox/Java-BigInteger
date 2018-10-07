@@ -47,8 +47,10 @@ class Elementary {
         for (i = size - 1; (i >= 0) && (a[i] == b[i]); i--) {
             ;
         }
-        return ((i < 0) ? BigInteger.EQUALS
-                : (a[i] & 0xFFFFFFFFL) < (b[i] & 0xFFFFFFFFL) ? BigInteger.LESS
+        return ((i < 0)
+                ? BigInteger.EQUALS
+                : (a[i] & 0xFFFFFFFFL) < (b[i] & 0xFFFFFFFFL)
+                ? BigInteger.LESS
                 : BigInteger.GREATER);
     }
 
@@ -59,52 +61,54 @@ class Elementary {
         int op1Sign = op1.sign;
         int op2Sign = op2.sign;
 
-        if (op1Sign == 0) {
-            return op2;
-        }
-        if (op2Sign == 0) {
-            return op1;
-        }
+//        if (op1Sign == 0) {
+//            return op2;
+//        }
+//        if (op2Sign == 0) {
+//            return op1;
+//        }
         int op1Len = op1.numberLength;
         int op2Len = op2.numberLength;
 
-        if (op1Len + op2Len == 2) {
-            long a = (op1.digits[0] & 0xFFFFFFFFL);
-            long b = (op2.digits[0] & 0xFFFFFFFFL);
-            long res;
-            int valueLo;
-            int valueHi;
-
-            if (op1Sign == op2Sign) {
-                res = a + b;
-                valueLo = (int) res;
-                valueHi = (int) (res >>> 32);
-                return ((valueHi == 0) ? new BigInteger(op1Sign, valueLo)
-                        : new BigInteger(op1Sign, 2, new int[] { valueLo,
-                        valueHi }));
-            }
-            return BigInteger.valueOf((op1Sign < 0) ? (b - a) : (a - b));
-        } else if (op1Sign == op2Sign) {
+//        if (op1Len + op2Len == 2) {
+//            long a = (op1.digits[0] & 0xFFFFFFFFL);
+//            long b = (op2.digits[0] & 0xFFFFFFFFL);
+//            long res;
+//            int valueLo;
+//            int valueHi;
+//
+//            if (op1Sign == op2Sign) {
+//                res = a + b;
+//                valueLo = (int) res;
+//                valueHi = (int) (res >>> 32);
+//                return ((valueHi == 0) ? new BigInteger(op1Sign, valueLo)
+//                        : new BigInteger(op1Sign, 2, new int[] { valueLo,
+//                        valueHi }));
+//            }
+//            return BigInteger.valueOf((op1Sign < 0) ? (b - a) : (a - b));
+//        } else
+        if (op1Sign == op2Sign) {
             resSign = op1Sign;
             // an augend should not be shorter than addend
-            resDigits = (op1Len >= op2Len) ? add(op1.digits, op1Len,
-                    op2.digits, op2Len) : add(op2.digits, op2Len, op1.digits,
-                    op1Len);
+            resDigits = (op1Len >= op2Len)
+                    ? add(op1.digits, op1Len, op2.digits, op2Len)
+                    : add(op2.digits, op2Len, op1.digits, op1Len);
         } else { // signs are different
-            int cmp = ((op1Len != op2Len) ? ((op1Len > op2Len) ? 1 : -1)
+            int cmp = ((op1Len != op2Len)
+                    ? ((op1Len > op2Len) ? 1 : -1)
                     : compareArrays(op1.digits, op2.digits, op1Len));
 
             if (cmp == BigInteger.EQUALS) {
                 return BigInteger.ZERO;
             }
             // a minuend should not be shorter than subtrahend
-            if (cmp == BigInteger.GREATER) {
-                resSign = op1Sign;
-                resDigits = subtract(op1.digits, op1Len, op2.digits, op2Len);
-            } else {
+//            if (cmp == BigInteger.GREATER) {
+//                resSign = op1Sign;
+//                resDigits = subtract(op1.digits, op1Len, op2.digits, op2Len);
+//            } else {
                 resSign = op2Sign;
                 resDigits = subtract(op2.digits, op2Len, op1.digits, op1Len);
-            }
+//            }
         }
         BigInteger res = new BigInteger(resSign, resDigits.length, resDigits);
         res.cutOffLeadingZeroes();
@@ -123,7 +127,7 @@ class Elementary {
         res[0] = (int) carry;
         carry >>= 32;
 
-        if (aSize >= bSize) {
+//        if (aSize >= bSize) {
             for (i = 1; i < bSize; i++) {
                 carry += ( a[i] & 0xFFFFFFFFL ) + ( b[i] & 0xFFFFFFFFL );
                 res[i] = (int) carry;
@@ -134,21 +138,21 @@ class Elementary {
                 res[i] = (int) carry;
                 carry >>= 32;
             }
-        } else {
-            for (i = 1; i < aSize; i++) {
-                carry += ( a[i] & 0xFFFFFFFFL ) + ( b[i] & 0xFFFFFFFFL );
-                res[i] = (int) carry;
-                carry >>= 32;
-            }
-            for (; i < bSize; i++) {
-                carry += b[i] & 0xFFFFFFFFL;
-                res[i] = (int) carry;
-                carry >>= 32;
-            }
-        }
-        if (carry != 0) {
-            res[i] = (int) carry;
-        }
+//        } else {
+//            for (i = 1; i < aSize; i++) {
+//                carry += ( a[i] & 0xFFFFFFFFL ) + ( b[i] & 0xFFFFFFFFL );
+//                res[i] = (int) carry;
+//                carry >>= 32;
+//            }
+//            for (; i < bSize; i++) {
+//                carry += b[i] & 0xFFFFFFFFL;
+//                res[i] = (int) carry;
+//                carry >>= 32;
+//            }
+//        }
+//        if (carry != 0) {
+//            res[i] = (int) carry;
+//        }
     }
 
     /** @see BigInteger#subtract(BigInteger) */
@@ -158,20 +162,20 @@ class Elementary {
         int op1Sign = op1.sign;
         int op2Sign = op2.sign;
 
-        if (op2Sign == 0) {
-            return op1;
-        }
+//        if (op2Sign == 0) {
+//            return op1;
+//        }
         int op1Len = op1.numberLength;
         int op2Len = op2.numberLength;
         if (op1Len + op2Len == 2) {
             long a = ( op1.digits[0] & 0xFFFFFFFFL );
             long b = ( op2.digits[0] & 0xFFFFFFFFL );
-            if (op1Sign < 0) {
-                a = -a;
-            }
-            if (op2Sign < 0) {
-                b = -b;
-            }
+//            if (op1Sign < 0) {
+//                a = -a;
+//            }
+//            if (op2Sign < 0) {
+//                b = -b;
+//            }
             return BigInteger.valueOf (a - b);
         }
         int cmp = ( ( op1Len != op2Len ) ? ( ( op1Len > op2Len ) ? 1 : -1 )
@@ -179,15 +183,15 @@ class Elementary {
 
         if (cmp == BigInteger.LESS) {
             resSign = -op2Sign;
-            resDigits = ( op1Sign == op2Sign ) ? subtract (op2.digits, op2Len,
-                    op1.digits, op1Len) : add (op2.digits, op2Len, op1.digits,
-                    op1Len);
+            resDigits = ( op1Sign == op2Sign )
+                    ? subtract (op2.digits, op2Len, op1.digits, op1Len)
+                    : add (op2.digits, op2Len, op1.digits, op1Len);
         } else {
             resSign = op1Sign;
             if (op1Sign == op2Sign) {
-                if (cmp == BigInteger.EQUALS) {
-                    return BigInteger.ZERO;
-                }
+//                if (cmp == BigInteger.EQUALS) {
+//                    return BigInteger.ZERO;
+//                }
                 resDigits = subtract (op1.digits, op1Len, op2.digits, op2Len);
             } else {
                 resDigits = add (op1.digits, op1Len, op2.digits, op2Len);
