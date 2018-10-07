@@ -19,8 +19,18 @@ public class Primality_Test {
     }
 
     @Test
+    public void prime_percent_11() {
+        assertPercentPrime(11);
+    }
+
+    @Test
     public void prime_percent_20() {
         assertPercentPrime(20);
+    }
+
+    @Test
+    public void prime_percent_21() {
+        assertPercentPrime(21);
     }
 
     @Test
@@ -39,7 +49,7 @@ public class Primality_Test {
         double ratio = harmony / jdk;
         double diff = abs(1.0-ratio);
         String message = "harmony = " + harmony + " jdk = " + jdk + " diff = " + diff;
-        assertTrue(diff<0.05,message);
+        assertTrue(diff<0.1,message);
     }
 
     static double ratio(long a, long b) {
@@ -50,11 +60,23 @@ public class Primality_Test {
         int primes = 0;
         int sample = bitLength * bitLength * bitLength * bitLength;
         for (int i=0; i<sample; tick(i++)) {
-            if (randomHarmony(bitLength).isProbablePrime(certainty)) {
+            BigInteger x = randomHarmony(bitLength);
+            comparePrimality(x);
+            if (x.isProbablePrime(certainty)) {
                 primes++;
             }
         }
         return ratio(primes,sample);
+    }
+
+    void comparePrimality(BigInteger x) {
+        java.math.BigInteger y = new java.math.BigInteger(x.toByteArray());
+        assertEquals(x.isProbablePrime(certainty),y.isProbablePrime(certainty));
+    }
+
+    void comparePrimality(java.math.BigInteger x) {
+        BigInteger y = new BigInteger(x.toByteArray());
+        assertEquals(x.isProbablePrime(certainty),y.isProbablePrime(certainty));
     }
 
     static void tick(int i) {
@@ -78,7 +100,9 @@ public class Primality_Test {
         int primes = 0;
         int sample = bitLength * bitLength * bitLength * bitLength;
         for (int i=0; i<sample; tick(i++)) {
-            if (randomJdk(bitLength).isProbablePrime(certainty)) {
+            java.math.BigInteger x = randomJdk(bitLength);
+            comparePrimality(x);
+            if (x.isProbablePrime(certainty)) {
                 primes++;
             }
         }

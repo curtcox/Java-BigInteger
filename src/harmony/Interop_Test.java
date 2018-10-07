@@ -13,6 +13,7 @@ public class Interop_Test {
 
     static final int positive = 1;
     static final Random random = new SecureRandom();
+    static final int certainty = 100;
     static final int samples = 100;
 
     @Test
@@ -79,6 +80,7 @@ public class Interop_Test {
         assertEquals(harmonyCopy,x);
         assertEquals(harmonyCopy,harmonyCopy);
         java.math.BigInteger jdk = new java.math.BigInteger(x.toByteArray());
+        assertEquals(x.isProbablePrime(certainty),jdk.isProbablePrime(certainty));
         BigInteger thruJdk = new BigInteger(jdk.toByteArray());
         assertEquals(x,thruJdk);
         assertEquals(thruJdk,x);
