@@ -22,9 +22,6 @@ package harmony;
  */
 class Multiplication {
 
-    /** Just to denote that this class can't be instantiated. */
-    private Multiplication() {}
-
     /**
      * Break point in digits (number of {@code int} elements)
      * between Karatsuba and Pencil and Paper multiply.

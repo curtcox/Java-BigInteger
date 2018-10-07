@@ -25,9 +25,6 @@ import java.util.Random;
  */
 class Primality {
 
-    /** Just to denote that this class can't be instantiated. */
-    private Primality() {}
-
     /** All prime numbers with bit length lesser than 10 bits. */
     private static final int primes[] = { 2, 3, 5, 7, 11, 13, 17, 19, 23, 29,
             31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101,
