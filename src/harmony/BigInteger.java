@@ -40,8 +40,7 @@ import harmony.internal.nls.Messages;
  * discouraged. In simple words: Do NOT implement any bit fields based on
  * BigInteger.
  */
-public class BigInteger extends Number implements Comparable<BigInteger>,
-        Serializable {
+public class BigInteger {
 
     /** This is the serialVersionUID used by the sun implementation. */
     private static final long serialVersionUID = -8287574255936472291L;
@@ -642,50 +641,6 @@ public class BigInteger extends Number implements Comparable<BigInteger>,
         // (sign != 0) implies that exists some non zero digit
         int i = getFirstNonzeroDigit();
         return ((i << 5) + Integer.numberOfTrailingZeros(digits[i]));
-    }
-
-    /**
-     * Returns this {@code BigInteger} as an int value. If {@code this} is too
-     * big to be represented as an int, then {@code this} % 2^32 is returned.
-     *
-     * @return this {@code BigInteger} as an int value.
-     */
-    @Override
-    public int intValue() {
-        return (sign * digits[0]);
-    }
-
-    /**
-     * Returns this {@code BigInteger} as an long value. If {@code this} is too
-     * big to be represented as an long, then {@code this} % 2^64 is returned.
-     *
-     * @return this {@code BigInteger} as a long value.
-     */
-    @Override
-    public long longValue() {
-        long value = (numberLength > 1) ? (((long) digits[1]) << 32)
-                | (digits[0] & 0xFFFFFFFFL) : (digits[0] & 0xFFFFFFFFL);
-        return (sign * value);
-    }
-
-    /**
-     * Returns this {@code BigInteger} as an float value. If {@code this} is too
-     * big to be represented as an float, then {@code Float.POSITIVE_INFINITY}
-     * or {@code Float.NEGATIVE_INFINITY} is returned. Note, that not all
-     * integers x in the range [-Float.MAX_VALUE, Float.MAX_VALUE] can be
-     * represented as a float. The float representation has a mantissa of length
-     * 24. For example, 2^24+1 = 16777217 is returned as float 16777216.0.
-     *
-     * @return this {@code BigInteger} as a float value.
-     */
-    @Override
-    public float floatValue() {
-        return (float) doubleValue();
-    }
-
-    @Override
-    public double doubleValue() {
-        throw new UnsupportedOperationException();
     }
 
     /**
