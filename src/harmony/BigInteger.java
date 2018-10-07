@@ -108,9 +108,6 @@ public class BigInteger {
     /** sign field, used for serialization. */
     private int signum;
 
-    /** absolute value field, used for serialization */
-    private byte[] magnitude;
-
     /** Cache for the hash code. */
     private transient int hashCode = 0;
 
