@@ -18,11 +18,7 @@
 
 package harmony;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.Random;
-import java.io.Serializable;
 
 import harmony.internal.nls.Messages;
 
@@ -1011,7 +1007,7 @@ public class BigInteger {
         }
         return firstNonzeroDigit;
     }
-    
+
     void unCache() {
         firstNonzeroDigit = -2;
     }
