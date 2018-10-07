@@ -464,25 +464,5 @@ class Division {
         result.cutOffLeadingZeroes();
         return result;
     }
-    
-    /**
-     * Performs {@code x = x mod (2<sup>n</sup>)}.
-     *
-     * @param x a positive number, it will store the result.
-     * @param n a positive exponent of {@code 2}.
-     */
-    static void inplaceModPow2(BigInteger x, int n) {
-        // PRE: (x > 0) and (n >= 0)
-        int fd = n >> 5;
-        int leadingZeros;
-
-        if ((x.numberLength < fd) || (x.bitLength() <= n)) {
-            return;
-        }
-        leadingZeros = 32 - (n & 31);
-        x.numberLength = fd + 1;
-        x.digits[fd] &= (leadingZeros < 32) ? (-1 >>> leadingZeros) : 0;
-        x.cutOffLeadingZeroes();
-    }
 
 }
