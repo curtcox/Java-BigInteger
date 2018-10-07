@@ -879,39 +879,6 @@ public class BigInteger extends Number implements Comparable<BigInteger>,
     }
 
     /**
-     * Returns a new {@code BigInteger} whose value is greatest common divisor
-     * of {@code this} and {@code val}. If {@code this==0} and {@code val==0}
-     * then zero is returned, otherwise the result is positive.
-     *
-     * @param val
-     *            value with which the greatest common divisor is computed.
-     * @return {@code gcd(this, val)}.
-     * @throws NullPointerException
-     *             if {@code val == null}.
-     */
-    public BigInteger gcd(BigInteger val) {
-        BigInteger val1 = this.abs();
-        BigInteger val2 = val.abs();
-        // To avoid a possible division by zero
-        if (val1.signum() == 0) {
-            return val2;
-        } else if (val2.signum() == 0) {
-            return val1;
-        }
-
-        // Optimization for small operands
-        // (op2.bitLength() < 64) and (op1.bitLength() < 64)
-        if (((val1.numberLength == 1) || ((val1.numberLength == 2) && (val1.digits[1] > 0)))
-                && (val2.numberLength == 1 || (val2.numberLength == 2 && val2.digits[1] > 0))) {
-            return BigInteger.valueOf(Division.gcdBinary(val1.longValue(), val2
-                    .longValue()));
-        }
-
-        return Division.gcdBinary(val1.copy(), val2.copy());
-
-    }
-
-    /**
      * Returns a new {@code BigInteger} whose value is {@code this * val}.
      *
      * @param val
