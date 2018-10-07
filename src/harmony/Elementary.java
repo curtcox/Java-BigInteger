@@ -238,53 +238,6 @@ class Elementary {
     }
 
     /**
-     * Performs {@code op1 += op2}. {@code op1} must have enough place to store
-     * the result (i.e. {@code op1.bitLength() >= op2.bitLength()}). Both
-     * should be positive (i.e. {@code op1 >= op2}).
-     *
-     * @param op1 the input minuend, and the output result.
-     * @param op2 the addend
-     */
-    static void inplaceAdd(BigInteger op1, BigInteger op2) {
-        // PRE: op1 >= op2 > 0
-        add (op1.digits, op1.digits, op1.numberLength, op2.digits,
-                op2.numberLength);
-        op1.numberLength = Math.min (Math.max (op1.numberLength,
-                op2.numberLength) + 1, op1.digits.length);
-        op1.cutOffLeadingZeroes ();
-        op1.unCache();
-    }
-
-    /**
-     * Adds an integer value to the array of integers remembering carry.
-     *
-     * @return a possible generated carry (0 or 1)
-     */
-    static int inplaceAdd(int a[], final int aSize, final int addend) {
-        long carry = addend & 0xFFFFFFFFL;
-
-        for (int i = 0; (carry != 0) && (i < aSize); i++) {
-            carry += a[i] & 0xFFFFFFFFL;
-            a[i] = (int) carry;
-            carry >>= 32;
-        }
-        return (int) carry;
-    }
-
-    /**
-     * Performs: {@code op1 += addend}. The number must to have place to hold a
-     * possible carry.
-     */
-    static void inplaceAdd(BigInteger op1, final int addend) {
-        int carry = inplaceAdd(op1.digits, op1.numberLength, addend);
-        if (carry == 1) {
-            op1.digits[op1.numberLength] = 1;
-            op1.numberLength++;
-        }
-        op1.unCache();
-    }
-
-    /**
      * Performs {@code op1 -= op2}. {@code op1} must have enough place to store
      * the result (i.e. {@code op1.bitLength() >= op2.bitLength()}). Both
      * should be positive (what implies that {@code op1 >= op2}).

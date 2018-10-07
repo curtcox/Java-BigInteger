@@ -218,8 +218,6 @@ class Multiplication {
      *
      *</tt>
      *
-     * @param op1 first factor of the multiplication {@code  op1 >= 0}
-     * @param op2 second factor of the multiplication {@code  op2 >= 0}
      * @return a {@code BigInteger} of value {@code  op1 * op2}
      */
     static BigInteger multiplyPAP(BigInteger a, BigInteger b) {
