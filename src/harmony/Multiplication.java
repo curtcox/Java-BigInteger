@@ -29,23 +29,6 @@ class Multiplication {
     static final int whenUseKaratsuba = 63; // an heuristic value
 
     /**
-     * An array with powers of ten that fit in the type {@code int}.
-     * ({@code 10^0,10^1,...,10^9})
-     */
-    static final int tenPows[] = {
-            1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000
-    };
-
-    /**
-     * An array with powers of five that fit in the type {@code int}.
-     * ({@code 5^0,5^1,...,5^13})
-     */
-    static final int fivePows[] = {
-            1, 5, 25, 125, 625, 3125, 15625, 78125, 390625,
-            1953125, 9765625, 48828125, 244140625, 1220703125
-    };
-
-    /**
      * An array with the first powers of ten in {@code BigInteger} version.
      * ({@code 10^0,10^1,...,10^31})
      */
