@@ -1011,16 +1011,7 @@ public class BigInteger {
         }
         return firstNonzeroDigit;
     }
-
-    /*
-     * Returns a copy of the current instance to achieve immutability
-     */
-    BigInteger copy() {
-        int[] copyDigits = new int[numberLength];
-        System.arraycopy(digits, 0, copyDigits, 0, numberLength);
-        return new BigInteger(sign, numberLength, copyDigits);
-    }
-
+    
     void unCache() {
         firstNonzeroDigit = -2;
     }
