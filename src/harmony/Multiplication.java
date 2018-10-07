@@ -337,30 +337,6 @@ class Multiplication {
         return result;
     }
 
-    static BigInteger pow(BigInteger base, int exponent) {
-        // PRE: exp > 0
-        BigInteger res = BigInteger.ONE;
-        BigInteger acc = base;
-
-        for (; exponent > 1; exponent >>= 1) {
-            if ((exponent & 1) != 0) {
-                // if odd, multiply one more time by acc
-                res = res.multiply(acc);
-            }
-            // acc = base^(2^i)
-            //a limit where karatsuba performs a faster square than the square algorithm
-            if ( acc.numberLength == 1 ){
-                acc = acc.multiply(acc); // square
-            }
-            else{
-                acc = new BigInteger(1, square(acc.digits, acc.numberLength, new int [acc.numberLength<<1]));
-            }
-        }
-        // exponent == 1, multiply one more time
-        res = res.multiply(acc);
-        return res;
-    }
-
     /**
      *  Performs a<sup>2</sup>
      *  @param a The number to square.

@@ -932,38 +932,6 @@ public class BigInteger extends Number implements Comparable<BigInteger>,
     }
 
     /**
-     * Returns a new {@code BigInteger} whose value is {@code this ^ exp}.
-     *
-     * @param exp
-     *            exponent to which {@code this} is raised.
-     * @return {@code this ^ exp}.
-     * @throws ArithmeticException
-     *             if {@code exp < 0}.
-     */
-    public BigInteger pow(int exp) {
-        if (exp < 0) {
-            // math.16=Negative exponent
-            throw new ArithmeticException(Messages.getString("math.16")); //$NON-NLS-1$
-        }
-        if (exp == 0) {
-            return ONE;
-        } else if (exp == 1 || equals(ONE) || equals(ZERO)) {
-            return this;
-        }
-
-        // if even take out 2^x factor which we can
-        // calculate by shifting.
-        if (!testBit(0)) {
-            int x = 1;
-            while (!testBit(x)) {
-                x++;
-            }
-            return getPowerOfTwo(x*exp).multiply(this.shiftRight(x).pow(exp));
-        }
-        return Multiplication.pow(this, exp);
-    }
-
-    /**
      * Returns a {@code BigInteger} array which contains {@code this / divisor}
      * at index 0 and {@code this % divisor} at index 1.
      *
