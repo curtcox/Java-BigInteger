@@ -1021,20 +1021,6 @@ public class BigInteger {
         return new BigInteger(sign, numberLength, copyDigits);
     }
 
-    private void readObject(ObjectInputStream in) throws IOException,
-            ClassNotFoundException {
-        in.defaultReadObject();
-        sign = signum;
-        putBytesPositiveToIntegers(magnitude);
-        cutOffLeadingZeroes();
-    }
-
-    private void writeObject(ObjectOutputStream out) throws IOException {
-        signum = signum();
-        magnitude = abs().toByteArray();
-        out.defaultWriteObject();
-    }
-
     void unCache() {
         firstNonzeroDigit = -2;
     }
