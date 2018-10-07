@@ -395,24 +395,6 @@ class Multiplication {
     }
 
     /**
-     * Multiplies a number by a power of five.
-     * This method is used in {@code BigDecimal} class.
-     * @param val the number to be multiplied
-     * @param exp a positive {@code int} exponent
-     * @return {@code val * 5<sup>exp</sup>}
-     */
-    static BigInteger multiplyByFivePow(BigInteger val, int exp) {
-        // PRE: exp >= 0
-        if (exp < fivePows.length) {
-            return multiplyByPositiveInt(val, fivePows[exp]);
-        } else if (exp < bigFivePows.length) {
-            return val.multiply(bigFivePows[exp]);
-        } else {// Large powers of five
-            return val.multiply(bigFivePows[1].pow(exp));
-        }
-    }
-
-    /**
      * Computes the value unsigned ((uint)a*(uint)b + (uint)c + (uint)d). This
      * method could improve the readability and performance of the code.
      *
