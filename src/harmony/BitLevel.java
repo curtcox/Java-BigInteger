@@ -65,24 +65,7 @@ class BitLevel {
         // PRE: 0 <= n < val.bitLength()
         return ((val.digits[n >> 5] & (1 << (n & 31))) != 0);
     }
-
-    /**
-     * Check if there are 1s in the lowest bits of this BigInteger
-     *
-     * @param numberOfBits the number of the lowest bits to check
-     * @return false if all bits are 0s, true otherwise
-     */
-    static boolean nonZeroDroppedBits(int numberOfBits, int digits[]) {
-        int intCount = numberOfBits >> 5;
-        int bitCount = numberOfBits & 31;
-        int i;
-
-        for (i = 0; (i < intCount) && (digits[i] == 0); i++) {
-            ;
-        }
-        return ((i != intCount) || (digits[i] << (32 - bitCount) != 0));
-    }
-
+    
     /** @see BigInteger#shiftLeft(int) */
     static BigInteger shiftLeft(BigInteger source, int count) {
         int intCount = count >> 5;
