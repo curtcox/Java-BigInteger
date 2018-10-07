@@ -160,25 +160,16 @@ class Primality {
         BigInteger x; // x := UNIFORM{2...n-1}
         BigInteger y; // y := x^(q * 2^j) mod n
         BigInteger n_minus_1 = n.subtract(BigInteger.ONE); // n-1
-        int bitLength = n_minus_1.bitLength(); // ~ log2(n-1)
         // (q,k) such that: n-1 = q * 2^k and q is odd
         int k = n_minus_1.getLowestSetBit();
         BigInteger q = n_minus_1.shiftRight(k);
-        Random rnd = new Random();
 
         for (int i = 0; i < t; i++) {
             // To generate a witness 'x', first it use the primes of table
             if (i < primes.length) {
                 x = BIprimes[i];
             } else {
-            /*
-             * It generates random witness only if it's necesssary. Note
-             * that all methods would call Miller-Rabin with t <= 50 so
-             * this part is only to do more robust the algorithm
-             */
-                do {
-                    x = new BigInteger(bitLength, rnd);
-                } while ((x.compareTo(n) >= BigInteger.EQUALS) || (x.sign == 0) || x.isOne());
+                throw new UnsupportedOperationException();
             }
             y = x.modPow(q, n);
             if (y.isOne() || y.equals(n_minus_1)) {

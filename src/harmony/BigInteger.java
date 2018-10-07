@@ -397,7 +397,7 @@ public class BigInteger {
     public BigInteger subtract(BigInteger val) {
         return Elementary.subtract(this, val);
     }
-    
+
     /**
      * Returns a new {@code BigInteger} whose value is {@code this >> n}. For
      * negative arguments, the result is also negative. The shift distance may
@@ -516,61 +516,6 @@ public class BigInteger {
         // (sign != 0) implies that exists some non zero digit
         int i = getFirstNonzeroDigit();
         return ((i << 5) + Integer.numberOfTrailingZeros(digits[i]));
-    }
-
-    /**
-     * Compares this {@code BigInteger} with {@code val}. Returns one of the
-     * three values 1, 0, or -1.
-     *
-     * @param val
-     *            value to be compared with {@code this}.
-     * @return {@code 1} if {@code this > val}, {@code -1} if {@code this < val}
-     *         , {@code 0} if {@code this == val}.
-     * @throws NullPointerException
-     *             if {@code val == null}.
-     */
-    public int compareTo(BigInteger val) {
-        if (sign > val.sign) {
-            return GREATER;
-        }
-        if (sign < val.sign) {
-            return LESS;
-        }
-        if (numberLength > val.numberLength) {
-            return sign;
-        }
-        if (numberLength < val.numberLength) {
-            return -val.sign;
-        }
-        // Equal sign and equal numberLength
-        return (sign * Elementary.compareArrays(digits, val.digits,
-                numberLength));
-    }
-
-    /**
-     * Returns the minimum of this {@code BigInteger} and {@code val}.
-     *
-     * @param val
-     *            value to be used to compute the minimum with {@code this}.
-     * @return {@code min(this, val)}.
-     * @throws NullPointerException
-     *             if {@code val == null}.
-     */
-    public BigInteger min(BigInteger val) {
-        return ((this.compareTo(val) == LESS) ? this : val);
-    }
-
-    /**
-     * Returns the maximum of this {@code BigInteger} and {@code val}.
-     *
-     * @param val
-     *            value to be used to compute the maximum with {@code this}
-     * @return {@code max(this, val)}
-     * @throws NullPointerException
-     *             if {@code val == null}
-     */
-    public BigInteger max(BigInteger val) {
-        return ((this.compareTo(val) == GREATER) ? this : val);
     }
 
     /**
