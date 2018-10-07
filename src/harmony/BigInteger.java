@@ -176,23 +176,6 @@ public class BigInteger {
     /**
      * Constructs a new {@code BigInteger} instance from the string
      * representation. The string representation consists of an optional minus
-     * sign followed by a non-empty sequence of decimal digits.
-     *
-     * @param val
-     *            string representation of the new {@code BigInteger}.
-     * @throws NullPointerException
-     *             if {@code val == null}.
-     * @throws NumberFormatException
-     *             if {@code val} is not a valid representation of a {@code
-     *             BigInteger}.
-     */
-    public BigInteger(String val) {
-        this(val, 10);
-    }
-
-    /**
-     * Constructs a new {@code BigInteger} instance from the string
-     * representation. The string representation consists of an optional minus
      * sign followed by a non-empty sequence of digits in the specified radix.
      * For the conversion the method {@code Character.digit(char, radix)} is
      * used.
