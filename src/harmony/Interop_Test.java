@@ -3,7 +3,9 @@ package harmony;
 import org.junit.jupiter.api.Test;
 
 import java.security.SecureRandom;
+import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -59,23 +61,29 @@ public class Interop_Test {
     }
 
     void assertInteropBitLength(int bitLength) {
+        Set<BigInteger> harmony = new HashSet();
+        Set<java.math.BigInteger> jdk = new HashSet();
         for (int i=0; i<samples; i++) {
             BigInteger x = new BigInteger(bitLength,random);
-            assertInterop(x);
+            jdk.add(assertInterop(x));
+            harmony.add(x);
         }
+        assertEquals(jdk.size(),harmony.size());
     }
 
-    void assertInterop(BigInteger x) {
+    java.math.BigInteger assertInterop(BigInteger x) {
         assertEquals(x,x);
         int[] digits = x.digits;
         BigInteger harmonyCopy = new BigInteger(positive,digits);
         assertEquals(x,harmonyCopy);
         assertEquals(harmonyCopy,x);
         assertEquals(harmonyCopy,harmonyCopy);
-        BigInteger thruJdk = new BigInteger(new java.math.BigInteger(x.toByteArray()).toByteArray());
+        java.math.BigInteger jdk = new java.math.BigInteger(x.toByteArray());
+        BigInteger thruJdk = new BigInteger(jdk.toByteArray());
         assertEquals(x,thruJdk);
         assertEquals(thruJdk,x);
         assertEquals(thruJdk,thruJdk);
+        return jdk;
     }
 
 }
