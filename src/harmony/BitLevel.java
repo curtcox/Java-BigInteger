@@ -79,7 +79,7 @@ class BitLevel {
         result.cutOffLeadingZeroes();
         return result;
     }
-    
+
     /**
      * Abstractly shifts left an array of integers in little endian (i.e. shift
      * it right). Total shift distance in bits is intCount * 32 + count
@@ -176,33 +176,7 @@ class BitLevel {
         result.cutOffLeadingZeroes();
         return result;
     }
-
-    /**
-     * Performs {@code val >>= count} where {@code val} is a positive number.
-     */
-    static void inplaceShiftRight(BigInteger val, int count) {
-        int sign = val.signum();
-        if (count == 0 || val.signum() == 0)
-            return;
-        int intCount = count >> 5; // count of integers
-        val.numberLength -= intCount;
-        if (!shiftRight(val.digits, val.numberLength, val.digits, intCount,
-                count & 31)
-                && sign < 0) {
-            // remainder not zero: add one to the result
-            int i;
-            for (i = 0; ( i < val.numberLength ) && ( val.digits[i] == -1 ); i++) {
-                val.digits[i] = 0;
-            }
-            if (i == val.numberLength) {
-                val.numberLength++;
-            }
-            val.digits[i]++;
-        }
-        val.cutOffLeadingZeroes();
-        val.unCache();
-    }
-
+    
     /**
      * Shifts right an array of integers. Total shift distance in bits is
      * intCount * 32 + count.
