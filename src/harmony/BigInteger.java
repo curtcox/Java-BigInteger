@@ -174,52 +174,6 @@ public class BigInteger {
     }
     
     /**
-     * Constructs a new {@code BigInteger} instance with the given sign and the
-     * given magnitude. The sign is given as an integer (-1 for negative, 0 for
-     * zero, 1 for positive). The magnitude is specified as a byte array. The
-     * most significant byte is the entry at index 0.
-     *
-     * @param signum
-     *            sign of the new {@code BigInteger} (-1 for negative, 0 for
-     *            zero, 1 for positive).
-     * @param magnitude
-     *            magnitude of the new {@code BigInteger} with the most
-     *            significant byte first.
-     * @throws NullPointerException
-     *             if {@code magnitude == null}.
-     * @throws NumberFormatException
-     *             if the sign is not one of -1, 0, 1 or if the sign is zero and
-     *             the magnitude contains non-zero entries.
-     */
-    public BigInteger(int signum, byte[] magnitude) {
-        if (magnitude == null) {
-            throw new NullPointerException();
-        }
-        if ((signum < -1) || (signum > 1)) {
-            // math.13=Invalid signum value
-            throw new NumberFormatException(Messages.getString("math.13")); //$NON-NLS-1$
-        }
-        if (signum == 0) {
-            for (byte element : magnitude) {
-                if (element != 0) {
-                    // math.14=signum-magnitude mismatch
-                    throw new NumberFormatException(Messages
-                            .getString("math.14")); //$NON-NLS-1$
-                }
-            }
-        }
-        if (magnitude.length == 0) {
-            sign = 0;
-            numberLength = 1;
-            digits = new int[] { 0 };
-        } else {
-            sign = signum;
-            putBytesPositiveToIntegers(magnitude);
-            cutOffLeadingZeroes();
-        }
-    }
-
-    /**
      * Constructs a new {@code BigInteger} from the given two's complement
      * representation. The most significant byte is the entry at index 0. The
      * most significant bit of this entry determines the sign of the new {@code
