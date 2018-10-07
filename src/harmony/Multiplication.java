@@ -293,17 +293,6 @@ class Multiplication {
         return (int)carry;
     }
 
-
-    /**
-     * Multiplies an array of integers by an integer value.
-     * @param a the array of integers
-     * @param aSize the number of elements of intArray to be multiplied
-     * @param factor the multiplier
-     * @return the top digit of production
-     */
-    static int multiplyByInt(int a[], final int aSize, final int factor) {
-        return multiplyByInt(a, a, aSize, factor);
-    }
     
     /**
      *  Performs a<sup>2</sup>
