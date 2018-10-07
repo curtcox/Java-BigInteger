@@ -1,16 +1,26 @@
 package harmony;
 
+import java.security.SecureRandom;
 import java.util.Random;
 
 class Benchmark {
 
-    static final Random random = new Random();
+    static final Random random = new SecureRandom();
     static final int certainty = 100;
 
     public static void main(String[] args) {
-        compare(10);
-        compare(100);
-        compare(1000);
+        for (int i=1; i<10; i++) {
+            compare(10 * i);
+        }
+        for (int i=1; i<10; i++) {
+            compare(100 * i);
+        }
+        for (int i=1; i<10; i++) {
+            compare(1000 * i);
+        }
+        for (int i=1; i<10; i++) {
+            compare(10000 * i);
+        }
     }
 
     static class Times {
@@ -30,14 +40,14 @@ class Benchmark {
 
     static Times jdk(int bitLength) {
         Times times = new Times();
-        for (int i=0; i< 1000; i++) {
+        for (int i=0; i< 10000; i++) {
             long t0 = now();
             java.math.BigInteger x = new java.math.BigInteger(bitLength,certainty,random);
             long t1 = now();
             x.isProbablePrime(certainty);
             long t2 = now();
-            times.create += t1 - t0;
-            times.test += t2 - t1;
+            times.create += (t1 - t0);
+            times.test += (t2 - t1);
 
         }
         return times;
@@ -51,8 +61,8 @@ class Benchmark {
             long t1 = now();
             x.isProbablePrime(certainty);
             long t2 = now();
-            times.create += t1 - t0;
-            times.test += t2 - t1;
+            times.create += (t1 - t0);
+            times.test += (t2 - t1);
         }
         return times;
     }
@@ -64,6 +74,7 @@ class Benchmark {
     static void compare(Times harmony, Times jdk) {
         print("harmony " + harmony);
         print("jdk     " + jdk);
+        print("harmony / jdk");
         print("create  " + ratio(harmony.create ,jdk.create));
         print("test    " + ratio(harmony.test   ,jdk.test));
     }
