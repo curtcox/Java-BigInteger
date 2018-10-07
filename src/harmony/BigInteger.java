@@ -397,18 +397,7 @@ public class BigInteger {
     public BigInteger subtract(BigInteger val) {
         return Elementary.subtract(this, val);
     }
-
-    /**
-     * Returns the sign of this {@code BigInteger}.
-     *
-     * @return {@code -1} if {@code this < 0},
-     *         {@code 0} if {@code this == 0},
-     *         {@code 1} if {@code this > 0}.
-     */
-    public int signum() {
-        return sign;
-    }
-
+    
     /**
      * Returns a new {@code BigInteger} whose value is {@code this >> n}. For
      * negative arguments, the result is also negative. The shift distance may
