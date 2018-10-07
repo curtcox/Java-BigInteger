@@ -170,59 +170,6 @@ class Division {
      * Divides an array by an integer value. Implements the Knuth's division
      * algorithm. See D. Knuth, The Art of Computer Programming, vol. 2.
      *
-     * @param dest the quotient
-     * @param src the dividend
-     * @param srcLength the length of the dividend
-     * @param divisor the divisor
-     * @return remainder
-     */
-    static int divideArrayByInt(int dest[], int src[], final int srcLength,
-                                final int divisor) {
-
-        long rem = 0;
-        long bLong = divisor & 0xffffffffL;
-
-        for (int i = srcLength - 1; i >= 0; i--) {
-            long temp = (rem << 32) | (src[i] & 0xffffffffL);
-            long quot;
-            if (temp >= 0) {
-                quot = (temp / bLong);
-                rem = (temp % bLong);
-            } else {
-                /*
-                 * make the dividend positive shifting it right by 1 bit then
-                 * get the quotient an remainder and correct them properly
-                 */
-                long aPos = temp >>> 1;
-                long bPos = divisor >>> 1;
-                quot = aPos / bPos;
-                rem = aPos % bPos;
-                // double the remainder and add 1 if a is odd
-                rem = (rem << 1) + (temp & 1);
-                if ((divisor & 1) != 0) {
-                    // the divisor is odd
-                    if (quot <= rem) {
-                        rem -= quot;
-                    } else {
-                        if (quot - rem <= bLong) {
-                            rem += bLong - quot;
-                            quot -= 1;
-                        } else {
-                            rem += (bLong << 1) - quot;
-                            quot -= 2;
-                        }
-                    }
-                }
-            }
-            dest[i] = (int) (quot & 0xffffffffL);
-        }
-        return (int) rem;
-    }
-
-    /**
-     * Divides an array by an integer value. Implements the Knuth's division
-     * algorithm. See D. Knuth, The Art of Computer Programming, vol. 2.
-     *
      * @param src the dividend
      * @param srcLength the length of the dividend
      * @param divisor the divisor
@@ -297,46 +244,6 @@ class Division {
             }
         }
         return (rem << 32) | (quot & 0xffffffffL);
-    }
-
-    /**
-     * Computes the quotient and the remainder after a division by an {@code int}
-     * number.
-     *
-     * @return an array of the form {@code [quotient, remainder]}.
-     */
-    static BigInteger[] divideAndRemainderByInteger(BigInteger val,
-                                                    int divisor, int divisorSign) {
-        // res[0] is a quotient and res[1] is a remainder:
-        int[] valDigits = val.digits;
-        int valLen = val.numberLength;
-        int valSign = val.sign;
-        if (valLen == 1) {
-            long a = (valDigits[0] & 0xffffffffL);
-            long b = (divisor & 0xffffffffL);
-            long quo = a / b;
-            long rem = a % b;
-            if (valSign != divisorSign) {
-                quo = -quo;
-            }
-            if (valSign < 0) {
-                rem = -rem;
-            }
-            return new BigInteger[] { BigInteger.valueOf(quo),
-                    BigInteger.valueOf(rem) };
-        }
-        int quotientLength = valLen;
-        int quotientSign = ((valSign == divisorSign) ? 1 : -1);
-        int quotientDigits[] = new int[quotientLength];
-        int remainderDigits[];
-        remainderDigits = new int[] { Division.divideArrayByInt(
-                quotientDigits, valDigits, valLen, divisor) };
-        BigInteger result0 = new BigInteger(quotientSign, quotientLength,
-                quotientDigits);
-        BigInteger result1 = new BigInteger(valSign, 1, remainderDigits);
-        result0.cutOffLeadingZeroes();
-        result1.cutOffLeadingZeroes();
-        return new BigInteger[] { result0, result1 };
     }
 
     /**

@@ -293,7 +293,7 @@ class Multiplication {
         return (int)carry;
     }
 
-    
+
     /**
      *  Performs a<sup>2</sup>
      *  @param a The number to square.
