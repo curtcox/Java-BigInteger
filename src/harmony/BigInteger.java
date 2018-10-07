@@ -172,7 +172,7 @@ public class BigInteger {
         numberLength = me.numberLength;
         digits = me.digits;
     }
-    
+
     /**
      * Constructs a new {@code BigInteger} from the given two's complement
      * representation. The most significant byte is the entry at index 0. The
@@ -360,10 +360,6 @@ public class BigInteger {
             }
         }
         return bytes;
-    }
-
-    /** @see BigInteger#BigInteger(String, int) */
-    private static void setFromString(BigInteger bi, String val, int radix) {
     }
 
     /**
