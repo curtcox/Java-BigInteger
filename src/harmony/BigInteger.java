@@ -191,13 +191,8 @@ public class BigInteger {
             // math.12=Zero length BigInteger
             throw new NumberFormatException(Messages.getString("math.12")); //$NON-NLS-1$
         }
-        if (val[0] < 0) {
-            sign = -1;
-            putBytesNegativeToIntegers(val);
-        } else {
-            sign = 1;
-            putBytesPositiveToIntegers(val);
-        }
+        sign = 1;
+        putBytesPositiveToIntegers(val);
         cutOffLeadingZeroes();
     }
 
@@ -761,56 +756,6 @@ public class BigInteger {
         // Put the first bytes in the highest element of the int array
         for (int j = 0; j < bytesLen; j++) {
             digits[i] = (digits[i] << 8) | (byteValues[j] & 0xFF);
-        }
-    }
-
-    /**
-     * Puts a big-endian byte array into a little-endian applying two
-     * complement.
-     */
-    private void putBytesNegativeToIntegers(byte[] byteValues) {
-        int bytesLen = byteValues.length;
-        int highBytes = bytesLen & 3;
-        numberLength = (bytesLen >> 2) + ((highBytes == 0) ? 0 : 1);
-        digits = new int[numberLength];
-        int i = 0;
-        // Setting the sign
-        digits[numberLength - 1] = -1;
-        // Put bytes to the int array starting from the end of the byte array
-        while (bytesLen > highBytes) {
-            digits[i] = (byteValues[--bytesLen] & 0xFF)
-                    | (byteValues[--bytesLen] & 0xFF) << 8
-                    | (byteValues[--bytesLen] & 0xFF) << 16
-                    | (byteValues[--bytesLen] & 0xFF) << 24;
-            if (digits[i] != 0) {
-                digits[i] = -digits[i];
-                firstNonzeroDigit = i;
-                i++;
-                while (bytesLen > highBytes) {
-                    digits[i] = (byteValues[--bytesLen] & 0xFF)
-                            | (byteValues[--bytesLen] & 0xFF) << 8
-                            | (byteValues[--bytesLen] & 0xFF) << 16
-                            | (byteValues[--bytesLen] & 0xFF) << 24;
-                    digits[i] = ~digits[i];
-                    i++;
-                }
-                break;
-            }
-            i++;
-        }
-        if (highBytes != 0) {
-            // Put the first bytes in the highest element of the int array
-            if (firstNonzeroDigit != -2) {
-                for (int j = 0; j < bytesLen; j++) {
-                    digits[i] = (digits[i] << 8) | (byteValues[j] & 0xFF);
-                }
-                digits[i] = ~digits[i];
-            } else {
-                for (int j = 0; j < bytesLen; j++) {
-                    digits[i] = (digits[i] << 8) | (byteValues[j] & 0xFF);
-                }
-                digits[i] = -digits[i];
-            }
         }
     }
 
