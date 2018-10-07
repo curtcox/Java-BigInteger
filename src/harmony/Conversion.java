@@ -1,4 +1,0 @@
-package harmony;
-
-class Conversion {
-}

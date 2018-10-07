@@ -1,4 +1,0 @@
-package harmony;
-
-class Logical {
-}
