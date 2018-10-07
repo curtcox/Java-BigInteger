@@ -394,26 +394,7 @@ class Division {
      */
     static BigInteger evenModPow(BigInteger base, BigInteger exponent,
                                  BigInteger modulus) {
-        // PRE: (base > 0), (exponent > 0), (modulus > 0) and (modulus even)
-        // STEP 1: Obtain the factorization 'modulus'= q * 2^j.
-        int j = modulus.getLowestSetBit();
-        BigInteger q = modulus.shiftRight(j);
-
-        // STEP 2: Compute x1 := base^exponent (mod q).
-        BigInteger x1 = oddModPow(base, exponent, q);
-
-        // STEP 3: Compute x2 := base^exponent (mod 2^j).
-        BigInteger x2 = pow2ModPow(base, exponent, j);
-
-        // STEP 4: Compute q^(-1) (mod 2^j) and y := (x2-x1) * q^(-1) (mod 2^j)
-        BigInteger qInv = modPow2Inverse(q, j);
-        BigInteger y = (x2.subtract(x1)).multiply(qInv);
-        inplaceModPow2(y, j);
-        if (y.sign < 0) {
-            y = y.add(BigInteger.getPowerOfTwo(j));
-        }
-        // STEP 5: Compute and return: x1 + q * y
-        return x1.add(q.multiply(y));
+        throw new UnsupportedOperationException();
     }
 
     /**
