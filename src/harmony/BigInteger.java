@@ -95,10 +95,9 @@ public class BigInteger {
             new BigInteger(1, 6), new BigInteger(1, 7), new BigInteger(1, 8),
             new BigInteger(1, 9), TEN };
 
-    static final BigInteger[] TWO_POWS;
+    static final BigInteger[] TWO_POWS = new BigInteger[32];
 
     static {
-        TWO_POWS = new BigInteger[32];
         for(int i = 0; i < TWO_POWS.length; i++) {
             TWO_POWS[i] = BigInteger.valueOf(1L<<i);
         }
@@ -480,7 +479,7 @@ public class BigInteger {
         BigInteger x1 = (BigInteger) x;
         return sign == x1.sign && numberLength == x1.numberLength
                 && equalsArrays(x1.digits);
-        
+
     }
 
     boolean equalsArrays(final int[] b) {
