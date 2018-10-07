@@ -161,9 +161,6 @@ class Elementary {
         if (op2Sign == 0) {
             return op1;
         }
-        if (op1Sign == 0) {
-            return op2.negate ();
-        }
         int op1Len = op1.numberLength;
         int op2Len = op2.numberLength;
         if (op1Len + op2Len == 2) {

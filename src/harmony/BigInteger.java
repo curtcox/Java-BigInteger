@@ -373,16 +373,6 @@ public class BigInteger {
     }
 
     /**
-     * Returns a new {@code BigInteger} whose value is the {@code -this}.
-     *
-     * @return {@code -this}.
-     */
-    public BigInteger negate() {
-        return ((sign == 0) ? this
-                : new BigInteger(-sign, numberLength, digits));
-    }
-
-    /**
      * Returns a new {@code BigInteger} whose value is {@code this + val}.
      *
      * @param val
