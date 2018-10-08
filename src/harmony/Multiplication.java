@@ -36,7 +36,7 @@ class Multiplication {
         return karatsuba(x, y);
     }
 
-    static BigInteger karatsuba(BigInteger op1, BigInteger op2) {
+    private static BigInteger karatsuba(BigInteger op1, BigInteger op2) {
         if (op2.numberLength > op1.numberLength) {
             throw new IllegalArgumentException();
         }
@@ -60,7 +60,7 @@ class Multiplication {
         return upper.add(middle).add(lower);
     }
 
-    static BigInteger multiplyPAP(BigInteger a, BigInteger b) {
+    private static BigInteger multiplyPAP(BigInteger a, BigInteger b) {
         // PRE: a >= b
         int aLen = a.numberLength;
         int bLen = b.numberLength;
@@ -97,7 +97,7 @@ class Multiplication {
         }
     }
 
-    static void multPAP(int a[], int b[], int t[], int aLen, int bLen) {
+    private static void multPAP(int a[], int b[], int t[], int aLen, int bLen) {
         if(a == b && aLen == bLen) {
             square(a, aLen, t);
             return;
@@ -125,7 +125,7 @@ class Multiplication {
         return (int)carry;
     }
 
-    static int[] square(int[] a, int aLen, int[] res) {
+    private static int[] square(int[] a, int aLen, int[] res) {
         long carry;
 
         for(int i = 0; i < aLen; i++){
