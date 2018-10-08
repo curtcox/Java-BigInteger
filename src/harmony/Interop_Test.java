@@ -56,11 +56,6 @@ public class Interop_Test {
         assertInteropBitLength(10000);
     }
 
-    @Test
-    public void random_100000() {
-        assertInteropBitLength(100000);
-    }
-
     void assertInteropBitLength(int bitLength) {
         Set<BigInteger> harmony = new HashSet();
         Set<java.math.BigInteger> jdk = new HashSet();
