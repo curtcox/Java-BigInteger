@@ -1,7 +1,9 @@
 package harmony;
 
-public interface IBigInteger {
-
+/**
+ * The minimal methods needed by Primality.
+ */
+interface IBigInteger {
     IBigInteger subtract(IBigInteger val);
     IBigInteger multiply(IBigInteger val);
     IBigInteger mod(IBigInteger val);
