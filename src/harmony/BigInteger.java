@@ -34,7 +34,7 @@ import java.util.Random;
  * discouraged. In simple words: Do NOT implement any bit fields based on
  * BigInteger.
  */
-public class BigInteger {
+public class BigInteger implements IBigInteger {
 
     /** This is the serialVersionUID used by the sun implementation. */
     private static final long serialVersionUID = -8287574255936472291L;
@@ -150,7 +150,7 @@ public class BigInteger {
         if (bitLength < 2) {
             throw new ArithmeticException();
         }
-        BigInteger me = Primality.consBigInteger(bitLength, certainty, rnd);
+        BigInteger me = (BigInteger) Primality.consBigInteger(bitLength, certainty, rnd);
         sign = me.sign;
         numberLength = me.numberLength;
         digits = me.digits;
@@ -339,8 +339,8 @@ public class BigInteger {
      * @throws NullPointerException
      *             if {@code val == null}.
      */
-    public BigInteger subtract(BigInteger val) {
-        return Elementary.subtract(this, val);
+    public BigInteger subtract(IBigInteger val) {
+        return Elementary.subtract(this, (BigInteger) val);
     }
 
     /**
@@ -489,8 +489,8 @@ public class BigInteger {
      * @throws NullPointerException
      *             if {@code val == null}.
      */
-    public BigInteger multiply(BigInteger val) {
-        return Multiplication.multiply(this, val);
+    public IBigInteger multiply(IBigInteger val) {
+        return Multiplication.multiply(this, (BigInteger) val);
     }
 
     /**
@@ -539,7 +539,7 @@ public class BigInteger {
      * is computed. The inverse of this only exists if {@code this} is
      * relatively prime to m, otherwise an exception is thrown.
      *
-     * @param exponent
+     //* @param exponent
      *            the exponent.
      * @param m
      *            the modulus.
@@ -550,7 +550,9 @@ public class BigInteger {
      *             if {@code m < 0} or if {@code exponent<0} and this is not
      *             relatively prime to {@code m}.
      */
-    public BigInteger modPow(BigInteger exponent, BigInteger m) {
+    public BigInteger modPow(IBigInteger iexponent, IBigInteger im) {
+        BigInteger exponent = (BigInteger) iexponent;
+        BigInteger m = (BigInteger) im;
         if (m.sign <= 0) {
             throw new ArithmeticException();
         }
@@ -569,7 +571,7 @@ public class BigInteger {
      * function is not equivalent to the behavior of the % operator defined for
      * the built-in {@code int}'s.
      *
-     * @param m
+     //* @param m
      *            the modulus.
      * @return {@code this mod m}.
      * @throws NullPointerException
@@ -577,7 +579,8 @@ public class BigInteger {
      * @throws ArithmeticException
      *             if {@code m < 0}.
      */
-    public BigInteger mod(BigInteger m) {
+    public BigInteger mod(IBigInteger im) {
+        BigInteger m = (BigInteger) im;
         if (m.sign <= 0) {
             throw new ArithmeticException();
         }
@@ -633,7 +636,7 @@ public class BigInteger {
     }
 
     /** Tests if {@code this.abs()} is equals to {@code ONE} */
-    boolean isOne() {
+    public boolean isOne() {
         return ((numberLength == 1) && (digits[0] == 1));
     }
 

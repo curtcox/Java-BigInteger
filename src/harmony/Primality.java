@@ -42,7 +42,7 @@ class Primality {
             1013, 1019, 1021 };
 
     /** All {@code BigInteger} prime numbers with bit length lesser than 8 bits. */
-    private static final BigInteger BIprimes[] = new BigInteger[primes.length];
+    private static final IBigInteger BIprimes[] = new IBigInteger[primes.length];
 
     /**
      * It encodes how many iterations of Miller-Rabin test are need to get an
@@ -79,7 +79,7 @@ class Primality {
      * @see BigInteger#probablePrime(int,Random)
      * @see #isProbablePrime(BigInteger, int)
      */
-    static BigInteger consBigInteger(int bitLength, int certainty, Random rnd) {
+    static IBigInteger consBigInteger(int bitLength, int certainty, Random rnd) {
         // PRE: bitLength >= 2;
         // For small numbers get a random prime from the prime table
         if (bitLength <= 10) {
@@ -106,7 +106,7 @@ class Primality {
 
     /**
      * @see BigInteger#isProbablePrime(int)
-     * @see #millerRabin(BigInteger, int)
+     // @see #millerRabin(BigInteger, int)
      * @ar.org.fitc.ref Optimizations: "A. Menezes - Handbook of applied
      *                  Cryptography, Chapter 4".
      */
@@ -152,14 +152,14 @@ class Primality {
      * @ar.org.fitc.ref "D. Knuth, The Art of Computer Programming Vo.2, Section
      *                  4.5.4., Algorithm P"
      */
-    private static boolean millerRabin(BigInteger n, int t) {
+    private static boolean millerRabin(IBigInteger n, int t) {
         // PRE: n >= 0, t >= 0
-        BigInteger x; // x := UNIFORM{2...n-1}
-        BigInteger y; // y := x^(q * 2^j) mod n
-        BigInteger n_minus_1 = n.subtract(BigInteger.ONE); // n-1
+        IBigInteger x; // x := UNIFORM{2...n-1}
+        IBigInteger y; // y := x^(q * 2^j) mod n
+        IBigInteger n_minus_1 = n.subtract(BigInteger.ONE); // n-1
         // (q,k) such that: n-1 = q * 2^k and q is odd
         int k = n_minus_1.getLowestSetBit();
-        BigInteger q = n_minus_1.shiftRight(k);
+        IBigInteger q = n_minus_1.shiftRight(k);
 
         for (int i = 0; i < t; i++) {
             // To generate a witness 'x', first it use the primes of table
