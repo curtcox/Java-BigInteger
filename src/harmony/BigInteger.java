@@ -466,8 +466,9 @@ public class BigInteger {
             return true;
         }
         BigInteger x1 = (BigInteger) x;
-        return sign == x1.sign && numberLength == x1.numberLength
-                && equalsArrays(x1.digits);
+        return sign == x1.sign &&
+            numberLength == x1.numberLength &&
+            equalsArrays(x1.digits);
 
     }
 
