@@ -194,7 +194,7 @@ class Division {
      * @return the long value containing the unsigned integer remainder in the
      *         left half and the unsigned integer quotient in the right half
      */
-    static long divideLongByInt(long a, int b) {
+    private static long divideLongByInt(long a, int b) {
         long quot;
         long rem;
         long bLong = b & 0xffffffffL;
@@ -241,7 +241,7 @@ class Division {
      * @param c the multiplier of b
      * @return the carry element of subtraction
      */
-    static int multiplyAndSubtract(int a[], int start, int b[], int bLen, int c) {
+    private static int multiplyAndSubtract(int a[], int start, int b[], int bLen, int c) {
         long carry0 = 0;
         long carry1 = 0;
 
@@ -275,7 +275,7 @@ class Division {
         return (int)(n2 & 0xFFFFFFFFL);
     }
 
-    static BigInteger squareAndMultiply(BigInteger x2, BigInteger a2, BigInteger exponent,BigInteger modulus, int n2  ){
+    private static BigInteger squareAndMultiply(BigInteger x2, BigInteger a2, BigInteger exponent,BigInteger modulus, int n2  ){
         BigInteger res = x2;
         for (int i = exponent.bitLength() - 1; i >= 0; i--) {
             res = monPro(res,res,modulus, n2);
@@ -292,7 +292,7 @@ class Division {
      *@see #oddModPow(BigInteger, BigInteger,
      *                           BigInteger)
      */
-    static BigInteger slidingWindow(BigInteger x2, BigInteger a2, BigInteger exponent,BigInteger modulus, int n2){
+    private static BigInteger slidingWindow(BigInteger x2, BigInteger a2, BigInteger exponent,BigInteger modulus, int n2){
         // fill odd low pows of a2
         BigInteger pows[] = new BigInteger[8];
         BigInteger res = x2;
@@ -407,7 +407,7 @@ class Division {
      * @ar.org.fitc.ref "C. K. Koc - Analyzing and Comparing Montgomery
      *                  Multiplication Algorithms"
      */
-    static BigInteger monPro(BigInteger a, BigInteger b, BigInteger modulus, int n2) {
+    private static BigInteger monPro(BigInteger a, BigInteger b, BigInteger modulus, int n2) {
         int modulusLen = modulus.numberLength();
         int res[] = new int[(modulusLen << 1) + 1];
         Multiplication.multArraysPAP(a.digits(), Math.min(modulusLen, a.numberLength()),
@@ -420,7 +420,7 @@ class Division {
     /**
      * Performs the final reduction of the Montgomery algorithm.
      */
-    static BigInteger finalSubtraction(int res[], BigInteger modulus){
+    private static BigInteger finalSubtraction(int res[], BigInteger modulus){
 
         // skipping leading zeros
         int modulusLen = modulus.numberLength();

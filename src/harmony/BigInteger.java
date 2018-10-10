@@ -542,7 +542,7 @@ public class BigInteger implements IBigInteger {
      *
      //* @param exponent
      *            the exponent.
-     * @param m
+     //* @param m
      *            the modulus.
      * @return {@code this^exponent mod val}.
      * @throws NullPointerException

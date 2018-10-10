@@ -4,6 +4,11 @@ package harmony;
  * The minimal methods needed by Primality.
  */
 interface IBigInteger {
+
+    static BigInteger fromSignLengthDigits(int sign, int length, int[] digits) {
+        return new BigInteger(sign,length,digits);
+    }
+
     IBigInteger subtract(IBigInteger val);
     IBigInteger multiply(IBigInteger val);
     IBigInteger mod(IBigInteger val);
@@ -14,6 +19,8 @@ interface IBigInteger {
     void setDigit(int i, int value);
     int[] digits();
     int numberLength();
+    int bitLength();
+    boolean testBit(int n);
     int getLowestSetBit();
 
 //    public int getLowestSetBit() {

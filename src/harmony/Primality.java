@@ -77,7 +77,7 @@ class Primality {
      *
      * @see BigInteger#BigInteger(int,int,Random)
      * @see BigInteger#probablePrime(int,Random)
-     * @see #isProbablePrime(BigInteger, int)
+     //* @see #isProbablePrime(BigInteger, int)
      */
     static IBigInteger consBigInteger(int bitLength, int certainty, Random rnd) {
         // PRE: bitLength >= 2;
@@ -88,7 +88,7 @@ class Primality {
         }
         int shiftCount = (-bitLength) & 31;
         int last = (bitLength + 31) >> 5;
-        BigInteger n = new BigInteger(1, last, new int[last]);
+        BigInteger n = IBigInteger.fromSignLengthDigits(1, last, new int[last]);
 
         last--;
         do {// To fill the array with random integers
@@ -104,19 +104,29 @@ class Primality {
         return n;
     }
 
+    static boolean isTwo(IBigInteger n) {
+        return (n.numberLength() == 1) && (n.getDigit(0) == 2);
+    }
+
+    static boolean isEven(IBigInteger n) {
+        return !n.testBit(0);
+    }
     /**
      * @see BigInteger#isProbablePrime(int)
      // @see #millerRabin(BigInteger, int)
      * @ar.org.fitc.ref Optimizations: "A. Menezes - Handbook of applied
      *                  Cryptography, Chapter 4".
      */
-    static boolean isProbablePrime(BigInteger n, int certainty) {
+    static boolean isProbablePrime(IBigInteger n, int certainty) {
         // PRE: n >= 0;
-        if ((certainty <= 0) || ((n.numberLength() == 1) && (n.getDigit(0) == 2))) {
+        if (certainty <= 0) {
+            return true;
+        }
+        if (isTwo(n)) {
             return true;
         }
         // To discard all even numbers
-        if (!n.testBit(0)) {
+        if (isEven(n)) {
             return false;
         }
         // To check if 'n' exists in the table (it fit in 10 bits)
@@ -130,6 +140,11 @@ class Primality {
                 return false;
             }
         }
+
+        return millerRabin(n, numberOfRequiredIterations(n,certainty));
+    }
+
+    static int numberOfRequiredIterations(IBigInteger n, int certainty) {
         // To set the number of iterations necessary for Miller-Rabin test
         int i;
         int bitLength = n.bitLength();
@@ -137,9 +152,7 @@ class Primality {
         for (i = 2; bitLength < BITS[i]; i++) {
             ;
         }
-        certainty = Math.min(i, 1 + ((certainty - 1) >> 1));
-
-        return millerRabin(n, certainty);
+        return Math.min(i, 1 + ((certainty - 1) >> 1));
     }
 
     /**
