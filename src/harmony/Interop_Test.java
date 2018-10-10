@@ -69,7 +69,7 @@ public class Interop_Test {
 
     java.math.BigInteger assertInterop(BigInteger x) {
         assertEquals(x,x);
-        int[] digits = x.digits;
+        int[] digits = x.digits();
         BigInteger harmonyCopy = new BigInteger(positive,digits);
         assertEquals(x,harmonyCopy);
         assertEquals(harmonyCopy,x);

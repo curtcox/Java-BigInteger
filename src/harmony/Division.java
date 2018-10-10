@@ -262,7 +262,7 @@ class Division {
      * Calculate the first digit of the inverse
      */
     private static int calcN(BigInteger a) {
-        long m0 = a.digits[0] & 0xFFFFFFFFL;
+        long m0 = a.getDigit(0) & 0xFFFFFFFFL;
         long n2 = 1L; // this is a'[0]
         long powerOfTwo = 2L;
         do {
@@ -338,7 +338,7 @@ class Division {
      * Performs modular exponentiation using the Montgomery Reduction. It
      * requires that all parameters be positive and the modulus be odd. >
      *
-     * @see BigInteger#modPow(BigInteger, BigInteger)
+     //* @see BigInteger#modPow(BigInteger, BigInteger)
      * @see #monPro(BigInteger, BigInteger, BigInteger, int)
      * @see #slidingWindow(BigInteger, BigInteger, BigInteger, BigInteger,
      *                      int)
@@ -348,7 +348,7 @@ class Division {
     static BigInteger oddModPow(BigInteger base, BigInteger exponent,
                                 BigInteger modulus) {
         // PRE: (base > 0), (exponent > 0), (modulus > 0) and (odd modulus)
-        int k = (modulus.numberLength << 5); // r = 2^k
+        int k = (modulus.numberLength() << 5); // r = 2^k
         // n-residue of base [base * r (mod modulus)]
         BigInteger a2 = base.shiftLeft(k).mod(modulus);
         // n-residue of base [1 * r (mod modulus)]
@@ -357,7 +357,7 @@ class Division {
         // Compute (modulus[0]^(-1)) (mod 2^32) for odd modulus
 
         int n2 = calcN(modulus);
-        if( modulus.numberLength == 1 ){
+        if( modulus.numberLength() == 1 ){
             res = squareAndMultiply(x2,a2, exponent, modulus,n2);
         } else {
             res = slidingWindow(x2, a2, exponent, modulus, n2);
@@ -369,8 +369,8 @@ class Division {
     private static void monReduction(int[] res, BigInteger modulus, int n2) {
 
         /* res + m*modulus_digits */
-        int[] modulus_digits = modulus.digits;
-        int modulusLen = modulus.numberLength;
+        int[] modulus_digits = modulus.digits();
+        int modulusLen = modulus.numberLength();
         long outerCarry = 0;
 
         for (int i = 0; i < modulusLen; i++){
@@ -408,10 +408,10 @@ class Division {
      *                  Multiplication Algorithms"
      */
     static BigInteger monPro(BigInteger a, BigInteger b, BigInteger modulus, int n2) {
-        int modulusLen = modulus.numberLength;
+        int modulusLen = modulus.numberLength();
         int res[] = new int[(modulusLen << 1) + 1];
-        Multiplication.multArraysPAP(a.digits, Math.min(modulusLen, a.numberLength),
-                b.digits, Math.min(modulusLen, b.numberLength), res);
+        Multiplication.multArraysPAP(a.digits(), Math.min(modulusLen, a.numberLength()),
+                b.digits(), Math.min(modulusLen, b.numberLength()), res);
         monReduction(res,modulus,n2);
         return finalSubtraction(res, modulus);
 
@@ -423,10 +423,10 @@ class Division {
     static BigInteger finalSubtraction(int res[], BigInteger modulus){
 
         // skipping leading zeros
-        int modulusLen = modulus.numberLength;
+        int modulusLen = modulus.numberLength();
         boolean doSub = res[modulusLen]!=0;
         if(!doSub) {
-            int modulusDigits[] = modulus.digits;
+            int modulusDigits[] = modulus.digits();
             doSub = true;
             for(int i = modulusLen - 1; i >= 0; i--) {
                 if(res[i] != modulusDigits[i]) {

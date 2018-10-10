@@ -36,9 +36,6 @@ import java.util.Random;
  */
 public class BigInteger implements IBigInteger {
 
-    /** This is the serialVersionUID used by the sun implementation. */
-    private static final long serialVersionUID = -8287574255936472291L;
-
     /* Fields used for the internal representation. */
 
     /**
@@ -52,10 +49,14 @@ public class BigInteger implements IBigInteger {
      * The magnitude array may be longer than strictly necessary, which results
      * in additional trailing zeros.
      */
-    transient int digits[];
+    private int digits[];
+    public int[] digits() {return digits;}
+    public int getDigit(int i) { return digits[i]; }
+    public void setDigit(int i,int x) { digits[i]=x; }
 
     /** The length of this in measured in ints. Can be less than digits.length(). */
-    transient int numberLength;
+    private int numberLength;
+    public int numberLength() { return numberLength; }
 
     /** The sign of this. */
     transient int sign;
@@ -101,10 +102,10 @@ public class BigInteger implements IBigInteger {
         }
     }
 
-    private transient int firstNonzeroDigit = -2;
+    private int firstNonzeroDigit = -2;
 
     /** Cache for the hash code. */
-    private transient int hashCode = 0;
+    private int hashCode = 0;
 
     /**
      * Constructs a random non-negative {@code BigInteger} instance in the range

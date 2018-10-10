@@ -57,16 +57,16 @@ class Elementary {
         int op1Sign = op1.sign;
         int op2Sign = op2.sign;
 
-        int op1Len = op1.numberLength;
-        int op2Len = op2.numberLength;
+        int op1Len = op1.numberLength();
+        int op2Len = op2.numberLength();
 
         if (op1Sign == op2Sign) {
             resSign = op1Sign;
-            resDigits = add(op1.digits, op1Len, op2.digits, op2Len);
+            resDigits = add(op1.digits(), op1Len, op2.digits(), op2Len);
         } else { // signs are different
             // a minuend should not be shorter than subtrahend
             resSign = op2Sign;
-            resDigits = subtract(op2.digits, op2Len, op1.digits, op1Len);
+            resDigits = subtract(op2.digits(), op2Len, op1.digits(), op1Len);
         }
         BigInteger res = new BigInteger(resSign, resDigits.length, resDigits);
         res.cutOffLeadingZeroes();
@@ -97,29 +97,29 @@ class Elementary {
         }
     }
 
-    /** @see BigInteger#subtract(BigInteger) */
+    ///** @see BigInteger#subtract(BigInteger) */
     static BigInteger subtract(BigInteger op1, BigInteger op2) {
         int resSign;
         int resDigits[];
         int op1Sign = op1.sign;
         int op2Sign = op2.sign;
 
-        int op1Len = op1.numberLength;
-        int op2Len = op2.numberLength;
+        int op1Len = op1.numberLength();
+        int op2Len = op2.numberLength();
         if (op1Len + op2Len == 2) {
-            long a = ( op1.digits[0] & 0xFFFFFFFFL );
-            long b = ( op2.digits[0] & 0xFFFFFFFFL );
+            long a = ( op1.getDigit(0) & 0xFFFFFFFFL );
+            long b = ( op2.getDigit(0) & 0xFFFFFFFFL );
             return BigInteger.valueOf (a - b);
         }
         int cmp = ( ( op1Len != op2Len ) ? ( ( op1Len > op2Len ) ? 1 : -1 )
-                : Elementary.compareArrays (op1.digits, op2.digits, op1Len) );
+                : Elementary.compareArrays (op1.digits(), op2.digits(), op1Len) );
 
         if (cmp == BigInteger.LESS) {
             resSign = -op2Sign;
-            resDigits = subtract (op2.digits, op2Len, op1.digits, op1Len);
+            resDigits = subtract (op2.digits(), op2Len, op1.digits(), op1Len);
         } else {
             resSign = op1Sign;
-            resDigits = subtract (op1.digits, op1Len, op2.digits, op2Len);
+            resDigits = subtract (op1.digits(), op1Len, op2.digits(), op2Len);
         }
         BigInteger res = new BigInteger (resSign, resDigits.length, resDigits);
         res.cutOffLeadingZeroes ();
@@ -173,7 +173,7 @@ class Elementary {
      */
     static void inplaceSubtract(BigInteger op1, BigInteger op2) {
         // PRE: op1 >= op2 > 0
-        subtract (op1.digits, op1.digits, op1.numberLength, op2.digits, op2.numberLength);
+        subtract (op1.digits(), op1.digits(), op1.numberLength(), op2.digits(), op2.numberLength());
         op1.cutOffLeadingZeroes ();
         op1.unCache();
     }

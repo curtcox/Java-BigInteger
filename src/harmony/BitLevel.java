@@ -36,8 +36,8 @@ class BitLevel {
 
     /** @see BigInteger#bitLength() */
     static int bitLength(BigInteger val) {
-        int bLength = (val.numberLength << 5);
-        int highDigit = val.digits[val.numberLength - 1];
+        int bLength = (val.numberLength() << 5);
+        int highDigit = val.getDigit(val.numberLength() - 1);
 
         // Subtracting all sign bits
         bLength -= Integer.numberOfLeadingZeros(highDigit);
@@ -50,18 +50,18 @@ class BitLevel {
      */
     static boolean testBit(BigInteger val, int n) {
         // PRE: 0 <= n < val.bitLength()
-        return ((val.digits[n >> 5] & (1 << (n & 31))) != 0);
+        return ((val.getDigit(n >> 5) & (1 << (n & 31))) != 0);
     }
 
     /** @see BigInteger#shiftLeft(int) */
     static BigInteger shiftLeft(BigInteger source, int count) {
         int intCount = count >> 5;
         count &= 31; // %= 32
-        int resLength = source.numberLength + intCount
+        int resLength = source.numberLength() + intCount
                 + ( ( count == 0 ) ? 0 : 1 );
         int resDigits[] = new int[resLength];
 
-        shiftLeft(resDigits, source.digits, intCount, count);
+        shiftLeft(resDigits, source.digits(), intCount, count);
         BigInteger result = new BigInteger(source.sign, resLength, resDigits);
         result.cutOffLeadingZeroes();
         return result;
@@ -120,10 +120,10 @@ class BitLevel {
     static BigInteger shiftRight(BigInteger source, int count) {
         int intCount = count >> 5; // count of integers
         count &= 31; // count of remaining bits
-        int resLength = source.numberLength - intCount;
+        int resLength = source.numberLength() - intCount;
         int resDigits[] = new int[resLength + 1];
 
-        shiftRight(resDigits, resLength, source.digits, intCount, count);
+        shiftRight(resDigits, resLength, source.digits(), intCount, count);
         BigInteger result = new BigInteger(source.sign, resLength, resDigits);
         result.cutOffLeadingZeroes();
         return result;
@@ -143,7 +143,7 @@ class BitLevel {
      *            the number of elements to be shifted
      * @param count
      *            the number of bits to be shifted
-     * @return dropped bit's are all zero (i.e. remaider is zero)
+     * @return dropped bit's are all zero (i.e. remainder is zero)
      */
     static boolean shiftRight(int result[], int resultLen, int source[], int intCount, int count) {
         int i;

@@ -92,14 +92,14 @@ class Primality {
 
         last--;
         do {// To fill the array with random integers
-            for (int i = 0; i < n.numberLength; i++) {
-                n.digits[i] = rnd.nextInt();
+            for (int i = 0; i < n.numberLength(); i++) {
+                n.setDigit(i,rnd.nextInt());
             }
             // To fix to the correct bitLength
-            n.digits[last] |= 0x80000000;
-            n.digits[last] >>>= shiftCount;
+            n.setDigit(last, n.getDigit(last) | 0x80000000);
+            n.setDigit(last, n.getDigit(last) >>> shiftCount);
             // To create an odd number
-            n.digits[0] |= 1;
+            n.setDigit(0, n.getDigit(0) | 1);
         } while (!isProbablePrime(n, certainty));
         return n;
     }
@@ -112,7 +112,7 @@ class Primality {
      */
     static boolean isProbablePrime(BigInteger n, int certainty) {
         // PRE: n >= 0;
-        if ((certainty <= 0) || ((n.numberLength == 1) && (n.digits[0] == 2))) {
+        if ((certainty <= 0) || ((n.numberLength() == 1) && (n.getDigit(0) == 2))) {
             return true;
         }
         // To discard all even numbers
@@ -120,12 +120,12 @@ class Primality {
             return false;
         }
         // To check if 'n' exists in the table (it fit in 10 bits)
-        if ((n.numberLength == 1) && ((n.digits[0] & 0XFFFFFC00) == 0)) {
-            return (Arrays.binarySearch(primes, n.digits[0]) >= 0);
+        if ((n.numberLength() == 1) && ((n.getDigit(0) & 0XFFFFFC00) == 0)) {
+            return (Arrays.binarySearch(primes, n.getDigit(0)) >= 0);
         }
         // To check if 'n' is divisible by some prime of the table
         for (int i = 1; i < primes.length; i++) {
-            if (Division.remainderArrayByInt(n.digits, n.numberLength,
+            if (Division.remainderArrayByInt(n.digits(), n.numberLength(),
                     primes[i]) == 0) {
                 return false;
             }

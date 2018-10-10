@@ -30,20 +30,20 @@ class Multiplication {
 
     /**
      * Performs a multiplication of two BigInteger and hides the algorithm used.
-     * @see BigInteger#multiply(BigInteger)
+     //* @see BigInteger#multiply(BigInteger)
      */
     static BigInteger multiply(BigInteger x, BigInteger y) {
         return karatsuba(x, y);
     }
 
     private static BigInteger karatsuba(BigInteger op1, BigInteger op2) {
-        if (op2.numberLength > op1.numberLength) {
+        if (op2.numberLength() > op1.numberLength()) {
             throw new IllegalArgumentException();
         }
-        if (op2.numberLength < whenUseKaratsuba) {
+        if (op2.numberLength() < whenUseKaratsuba) {
             return multiplyPAP(op1, op2);
         }
-        int ndiv2 = (op1.numberLength & 0xFFFFFFFE) << 4;
+        int ndiv2 = (op1.numberLength() & 0xFFFFFFFE) << 4;
         BigInteger upperOp1 = op1.shiftRight(ndiv2);
         BigInteger upperOp2 = op2.shiftRight(ndiv2);
         BigInteger lowerOp1 = op1.subtract(upperOp1.shiftLeft(ndiv2));
@@ -62,21 +62,21 @@ class Multiplication {
 
     private static BigInteger multiplyPAP(BigInteger a, BigInteger b) {
         // PRE: a >= b
-        int aLen = a.numberLength;
-        int bLen = b.numberLength;
+        int aLen = a.numberLength();
+        int bLen = b.numberLength();
         int resLength = aLen + bLen;
         int resSign = (a.sign != b.sign) ? -1 : 1;
         // A special case when both numbers don't exceed int
         if (resLength == 2) {
-            long val = unsignedMultAddAdd(a.digits[0], b.digits[0], 0, 0);
+            long val = unsignedMultAddAdd(a.getDigit(0), b.getDigit(0), 0, 0);
             int valueLo = (int)val;
             int valueHi = (int)(val >>> 32);
             return ((valueHi == 0)
                     ? new BigInteger(resSign, valueLo)
                     : new BigInteger(resSign, 2, new int[]{valueLo, valueHi}));
         }
-        int[] aDigits = a.digits;
-        int[] bDigits = b.digits;
+        int[] aDigits = a.digits();
+        int[] bDigits = b.digits();
         int resDigits[] = new int[resLength];
         // Common case
         multArraysPAP(aDigits, aLen, bDigits, bLen, resDigits);
