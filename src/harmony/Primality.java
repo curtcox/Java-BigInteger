@@ -86,23 +86,12 @@ class Primality {
             int rp[] = offsetPrimes[bitLength];
             return BIprimes[rp[0] + rnd.nextInt(rp[1])];
         }
-        int shiftCount = (-bitLength) & 31;
-        int last = (bitLength + 31) >> 5;
-        BigInteger n = IBigInteger.fromSignLengthDigits(1, last, new int[last]);
-
-        last--;
-        do {// To fill the array with random integers
-            for (int i = 0; i < n.numberLength(); i++) {
-                n.setDigit(i,rnd.nextInt());
-            }
-            // To fix to the correct bitLength
-            n.setDigit(last, n.getDigit(last) | 0x80000000);
-            n.setDigit(last, n.getDigit(last) >>> shiftCount);
-            // To create an odd number
-            n.setDigit(0, n.getDigit(0) | 1);
-        } while (!isProbablePrime(n, certainty));
-        return n;
-    }
+        IBigInteger candidate = new BigInteger(bitLength,rnd);
+        while (!isProbablePrime(candidate, certainty)) {
+            candidate = new BigInteger(bitLength,rnd);
+        }
+        return candidate;
+     }
 
     static boolean isTwo(IBigInteger n) {
         return (n.numberLength() == 1) && (n.getDigit(0) == 2);
@@ -135,8 +124,7 @@ class Primality {
         }
         // To check if 'n' is divisible by some prime of the table
         for (int i = 1; i < primes.length; i++) {
-            if (Division.remainderArrayByInt(n.digits(), n.numberLength(),
-                    primes[i]) == 0) {
+            if (n.mod(BIprimes[i]).equals(BigInteger.ZERO)) {
                 return false;
             }
         }
@@ -167,13 +155,13 @@ class Primality {
      */
     private static boolean millerRabin(IBigInteger n, int t) {
         // PRE: n >= 0, t >= 0
+        final IBigInteger n_minus_1 = n.subtract(BigInteger.ONE); // n-1
+        // (q,k) such that: n-1 = q * 2^k and q is odd
+        final int k = n_minus_1.getLowestSetBit();
+        final IBigInteger q = n_minus_1.shiftRight(k);
+
         IBigInteger x; // x := UNIFORM{2...n-1}
         IBigInteger y; // y := x^(q * 2^j) mod n
-        IBigInteger n_minus_1 = n.subtract(BigInteger.ONE); // n-1
-        // (q,k) such that: n-1 = q * 2^k and q is odd
-        int k = n_minus_1.getLowestSetBit();
-        IBigInteger q = n_minus_1.shiftRight(k);
-
         for (int i = 0; i < t; i++) {
             // To generate a witness 'x', first it use the primes of table
             if (i < primes.length) {

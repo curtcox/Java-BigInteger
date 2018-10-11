@@ -5,8 +5,9 @@ package harmony;
  */
 interface IBigInteger {
 
-    static BigInteger fromSignLengthDigits(int sign, int length, int[] digits) {
-        return new BigInteger(sign,length,digits);
+    interface Factory {
+        IBigInteger random(int bits);
+        IBigInteger prime(int bits);
     }
 
     IBigInteger subtract(IBigInteger val);
@@ -16,7 +17,6 @@ interface IBigInteger {
     boolean isOne();
     IBigInteger shiftRight(int n);
     int getDigit(int i);
-    void setDigit(int i, int value);
     int[] digits();
     int numberLength();
     int bitLength();
