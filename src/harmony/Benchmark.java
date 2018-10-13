@@ -1,13 +1,10 @@
 package harmony;
 
-import java.security.SecureRandom;
-import java.util.Random;
-
 class Benchmark {
 
-    static final Random random = new SecureRandom();
-    static final int certainty = 100;
     static final int samples = 10000;
+    static final IBigInteger.Factory harmony = IBigInteger.harmony;
+    static final IBigInteger.Factory jdk = IBigInteger.jdk;
 
     public static void main(String[] args) {
         for (int i=1; i<10; i++) {
@@ -40,18 +37,11 @@ class Benchmark {
     }
 
     static Times jdk(int bitLength) {
-        Times times = new Times();
-        for (int i=0; i< samples; tick(i++)) {
-            long t0 = now();
-            java.math.BigInteger x = new java.math.BigInteger(bitLength,certainty,random);
-            long t1 = now();
-            x.isProbablePrime(certainty);
-            long t2 = now();
-            times.create += (t1 - t0);
-            times.test += (t2 - t1);
-        }
-        print("");
-        return times;
+        return factory(jdk,bitLength);
+    }
+
+    static Times harmony(int bitLength) {
+        return factory(harmony,bitLength);
     }
 
     static void tick(int i) {
@@ -60,13 +50,13 @@ class Benchmark {
         }
     }
 
-    static Times harmony(int bitLength) {
+    static Times factory(IBigInteger.Factory factory,int bitLength) {
         Times times = new Times();
         for (int i=0; i< samples; tick(i++)) {
             long t0 = now();
-            BigInteger x = new BigInteger(bitLength,certainty,random);
+            IBigInteger x = factory.prime(bitLength);
             long t1 = now();
-            x.isProbablePrime(certainty);
+            x.isPrime();
             long t2 = now();
             times.create += (t1 - t0);
             times.test += (t2 - t1);

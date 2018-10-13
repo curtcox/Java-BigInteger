@@ -2,16 +2,13 @@ package harmony;
 
 import org.junit.jupiter.api.Test;
 
-import java.security.SecureRandom;
-import java.util.Random;
-
 import static java.lang.Math.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class Primality_Test {
 
-    static final int certainty = 100;
-    static final Random random = new SecureRandom();
+    static final IBigInteger.Factory harmony = IBigInteger.harmony;
+    static final IBigInteger.Factory jdk = IBigInteger.jdk;
 
     @Test
     public void prime_percent_10() {
@@ -43,6 +40,25 @@ public class Primality_Test {
         assertPercentPrime(80);
     }
 
+    @Test
+    public void numberOfRequiredIterations() {
+        assertEquals(50,Primality.numberOfRequiredIterations(1));
+        assertEquals(50,Primality.numberOfRequiredIterations(10));
+        assertEquals(47,Primality.numberOfRequiredIterations(50));
+        assertEquals(37,Primality.numberOfRequiredIterations(100));
+        assertEquals(22,Primality.numberOfRequiredIterations(200));
+        assertEquals(14,Primality.numberOfRequiredIterations(300));
+        assertEquals(10,Primality.numberOfRequiredIterations(400));
+        assertEquals( 8,Primality.numberOfRequiredIterations(500));
+        assertEquals(7,Primality.numberOfRequiredIterations(600));
+        assertEquals(6,Primality.numberOfRequiredIterations(700));
+        assertEquals(5,Primality.numberOfRequiredIterations(800));
+        assertEquals(5,Primality.numberOfRequiredIterations(900));
+        assertEquals(4,Primality.numberOfRequiredIterations(1000));
+        assertEquals(2,Primality.numberOfRequiredIterations(5000));
+        assertEquals(2,Primality.numberOfRequiredIterations(10000));
+    }
+
     void assertPercentPrime(int bitLength) {
         double harmony = harmonyPercentPrime(bitLength);
         double jdk = jdkPercentPrime(bitLength);
@@ -57,26 +73,19 @@ public class Primality_Test {
     }
 
     double harmonyPercentPrime(int bitLength) {
-        int primes = 0;
-        int sample = bitLength * bitLength * bitLength * bitLength;
-        for (int i=0; i<sample; tick(i++)) {
-            BigInteger x = randomHarmony(bitLength);
-            comparePrimality(x);
-            if (x.isProbablePrime(certainty)) {
-                primes++;
-            }
+        return percentPrime(harmony,bitLength);
+    }
+
+    void comparePrimality(IBigInteger x) {
+        assertEquals(x.isPrime(),other(x).isPrime());
+    }
+
+    static IBigInteger other(IBigInteger x) {
+        if (x instanceof HarmonyAsIBigInteger) {
+            return jdk.from(x.toByteArray());
+        } else {
+            return harmony.from(x.toByteArray());
         }
-        return ratio(primes,sample);
-    }
-
-    void comparePrimality(BigInteger x) {
-        java.math.BigInteger y = new java.math.BigInteger(x.toByteArray());
-        assertEquals(x.isProbablePrime(certainty),y.isProbablePrime(certainty));
-    }
-
-    void comparePrimality(java.math.BigInteger x) {
-        BigInteger y = new BigInteger(x.toByteArray());
-        assertEquals(x.isProbablePrime(certainty),y.isProbablePrime(certainty));
     }
 
     static void tick(int i) {
@@ -88,21 +97,17 @@ public class Primality_Test {
         }
     }
 
-    private BigInteger randomHarmony(int bitLength) {
-        return new BigInteger(bitLength,random);
-    }
-
-    private java.math.BigInteger randomJdk(int bitLength) {
-        return new java.math.BigInteger(bitLength,random);
-    }
-
     double jdkPercentPrime(int bitLength) {
+        return percentPrime(jdk,bitLength);
+    }
+
+    double percentPrime(IBigInteger.Factory factory,int bitLength) {
         int primes = 0;
         int sample = bitLength * bitLength * bitLength * bitLength;
         for (int i=0; i<sample; tick(i++)) {
-            java.math.BigInteger x = randomJdk(bitLength);
+            IBigInteger x = factory.random(bitLength);
             comparePrimality(x);
-            if (x.isProbablePrime(certainty)) {
+            if (x.isPrime()) {
                 primes++;
             }
         }

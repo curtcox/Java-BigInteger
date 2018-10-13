@@ -1,24 +1,23 @@
 package harmony;
 
-import java.math.BigInteger;
-
-final class JdkAsIBigInteger implements IBigInteger {
+final class HarmonyAsIBigInteger implements IBigInteger {
 
     private final BigInteger bigInteger;
+    private final Primality primality;
     private static final BigInteger zero = BigInteger.ZERO;
     private static final BigInteger one = BigInteger.ONE;
-    private static final BigInteger two = BigInteger.TWO;
 
-    JdkAsIBigInteger(BigInteger bigInteger) {
+    HarmonyAsIBigInteger(BigInteger bigInteger, Primality primality) {
         this.bigInteger = bigInteger;
+        this.primality = primality;
     }
 
     static private BigInteger i(IBigInteger val) {
-        return ((JdkAsIBigInteger)val).bigInteger;
+        return ((HarmonyAsIBigInteger)val).bigInteger;
     }
 
-    static private IBigInteger o(BigInteger val) {
-        return new JdkAsIBigInteger(val);
+    private IBigInteger o(BigInteger val) {
+        return new HarmonyAsIBigInteger(val,primality);
     }
 
     @Override
@@ -48,22 +47,22 @@ final class JdkAsIBigInteger implements IBigInteger {
 
     @Override
     public boolean isOne() {
-        return bigInteger.equals(one);
+        return bigInteger.isOne();
     }
 
     @Override
     public boolean isTwo() {
-        return bigInteger.equals(two);
+        return (bigInteger.numberLength() == 1) && (bigInteger.getDigit(0) == 2);
     }
 
     @Override
     public boolean isEven() {
-        return bigInteger.mod(two).equals(zero);
+        return !bigInteger.testBit(0);
     }
 
     @Override
     public boolean isPrime() {
-        return bigInteger.isProbablePrime(certainty);
+        return primality.isProbablePrime(this);
     }
 
     @Override
@@ -98,8 +97,7 @@ final class JdkAsIBigInteger implements IBigInteger {
 
     @Override
     public boolean equals(Object other) {
-        JdkAsIBigInteger that = (JdkAsIBigInteger) other;
+        HarmonyAsIBigInteger that = (HarmonyAsIBigInteger) other;
         return bigInteger.equals(that.bigInteger);
     }
-
 }

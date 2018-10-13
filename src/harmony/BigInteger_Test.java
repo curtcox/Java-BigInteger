@@ -2,14 +2,11 @@ package harmony;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.Random;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 public class BigInteger_Test {
 
-    static final Random random = new Random();
-    static final int certainty = 100;
+    static final IBigInteger.Factory harmony = IBigInteger.harmony;
 
     @Test
     public void can_create() {
@@ -57,8 +54,8 @@ public class BigInteger_Test {
     }
 
     void assertRandomPrime(int bitLength) {
-        final BigInteger x = new BigInteger(bitLength,certainty,random);
-        assertTrue(x.isProbablePrime(certainty));
+        final IBigInteger x = harmony.prime(bitLength);
+        assertTrue(x.isPrime());
     }
 
 }

@@ -17,13 +17,16 @@
 
 package harmony;
 
-import java.util.Arrays;
-import java.util.Random;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Provides primality probabilistic methods.
  */
-class Primality {
+final class Primality {
+
+    /** All {@code BigInteger} prime numbers with bit length lesser than 8 bits. */
+    private final List<IBigInteger> BIprimes;
 
     /** All prime numbers with bit length lesser than 10 bits. */
     private static final int primes[] = { 2, 3, 5, 7, 11, 13, 17, 19, 23, 29,
@@ -41,9 +44,6 @@ class Primality {
             919, 929, 937, 941, 947, 953, 967, 971, 977, 983, 991, 997, 1009,
             1013, 1019, 1021 };
 
-    /** All {@code BigInteger} prime numbers with bit length lesser than 8 bits. */
-    private static final IBigInteger BIprimes[] = new IBigInteger[primes.length];
-
     /**
      * It encodes how many iterations of Miller-Rabin test are need to get an
      * error bound not greater than {@code 2<sup>(-100)</sup>}. For example:
@@ -56,86 +56,77 @@ class Primality {
             110, 105, 101, 96, 92, 87, 83, 78, 73, 69, 64, 59, 54, 49, 44, 38,
             32, 26, 1 };
 
-    /**
-     * It encodes how many i-bit primes there are in the table for
-     * {@code i=2,...,10}. For example {@code offsetPrimes[6]} says that from
-     * index {@code 11} exists {@code 7} consecutive {@code 6}-bit prime
-     * numbers in the array.
-     */
-    private static final int[][] offsetPrimes = { null, null, { 0, 2 },
-            { 2, 2 }, { 4, 2 }, { 6, 5 }, { 11, 7 }, { 18, 13 }, { 31, 23 },
-            { 54, 43 }, { 97, 75 } };
+//    /**
+//     * It encodes how many i-bit primes there are in the table for
+//     * {@code i=2,...,10}. For example {@code offsetPrimes[6]} says that from
+//     * index {@code 11} exists {@code 7} consecutive {@code 6}-bit prime
+//     * numbers in the array.
+//     */
+//    private static final int[][] offsetPrimes = { null, null, { 0, 2 },
+//            { 2, 2 }, { 4, 2 }, { 6, 5 }, { 11, 7 }, { 18, 13 }, { 31, 23 },
+//            { 54, 43 }, { 97, 75 } };
 
-    static {// To initialize the dual table of BigInteger primes
+    static final int certainty = IBigInteger.certainty;
+
+    private Primality(List<IBigInteger> BIprimes) {
+        this.BIprimes = BIprimes;
+    }
+
+    static Primality from(IBigInteger.Factory factory) {
+        List<IBigInteger> big = new ArrayList<>();
         for (int i = 0; i < primes.length; i++) {
-            BIprimes[i] = BigInteger.valueOf(primes[i]);
+            big.add(factory.valueOf(primes[i]));
         }
+        return new Primality(big);
     }
+
 
     /**
-     * A random number is generated until a probable prime number is found.
-     *
-     * @see BigInteger#BigInteger(int,int,Random)
-     * @see BigInteger#probablePrime(int,Random)
-     //* @see #isProbablePrime(BigInteger, int)
-     */
-    static IBigInteger consBigInteger(int bitLength, int certainty, Random rnd) {
-        // PRE: bitLength >= 2;
-        // For small numbers get a random prime from the prime table
-        if (bitLength <= 10) {
-            int rp[] = offsetPrimes[bitLength];
-            return BIprimes[rp[0] + rnd.nextInt(rp[1])];
-        }
-        IBigInteger candidate = new BigInteger(bitLength,rnd);
-        while (!isProbablePrime(candidate, certainty)) {
-            candidate = new BigInteger(bitLength,rnd);
-        }
-        return candidate;
-     }
-
-    static boolean isTwo(IBigInteger n) {
-        return (n.numberLength() == 1) && (n.getDigit(0) == 2);
-    }
-
-    static boolean isEven(IBigInteger n) {
-        return !n.testBit(0);
-    }
-    /**
-     * @see BigInteger#isProbablePrime(int)
+     //* @see BigInteger#isProbablePrime(int)
      // @see #millerRabin(BigInteger, int)
      * @ar.org.fitc.ref Optimizations: "A. Menezes - Handbook of applied
      *                  Cryptography, Chapter 4".
      */
-    static boolean isProbablePrime(IBigInteger n, int certainty) {
+    boolean isProbablePrime(IBigInteger n) {
         // PRE: n >= 0;
         if (certainty <= 0) {
             return true;
         }
-        if (isTwo(n)) {
+        if (n.isTwo()) {
             return true;
         }
         // To discard all even numbers
-        if (isEven(n)) {
+        if (n.isEven()) {
             return false;
         }
-        // To check if 'n' exists in the table (it fit in 10 bits)
-        if ((n.numberLength() == 1) && ((n.getDigit(0) & 0XFFFFFC00) == 0)) {
-            return (Arrays.binarySearch(primes, n.getDigit(0)) >= 0);
+        if (isSmallEnoughToBeInTable(n)) {
+            return isInTable(n);
         }
         // To check if 'n' is divisible by some prime of the table
         for (int i = 1; i < primes.length; i++) {
-            if (n.mod(BIprimes[i]).equals(BigInteger.ZERO)) {
+            if (n.mod(BIprimes.get(i)).isZero()) {
                 return false;
             }
         }
 
-        return millerRabin(n, numberOfRequiredIterations(n,certainty));
+        return millerRabin(n, numberOfRequiredIterations(n.bitLength()));
     }
 
-    static int numberOfRequiredIterations(IBigInteger n, int certainty) {
+    boolean isInTable(IBigInteger n) {
+        return BIprimes.contains(n);
+    }
+
+    boolean isSmallEnoughToBeInTable(IBigInteger n) {
+        return n.lessThanOrEqualTo(largestTablePrime());
+    }
+
+    private IBigInteger largestTablePrime() {
+        return BIprimes.get(BIprimes.size()-1);
+    }
+
+    static int numberOfRequiredIterations(int bitLength) {
         // To set the number of iterations necessary for Miller-Rabin test
         int i;
-        int bitLength = n.bitLength();
 
         for (i = 2; bitLength < BITS[i]; i++) {
             ;
@@ -153,9 +144,9 @@ class Primality {
      * @ar.org.fitc.ref "D. Knuth, The Art of Computer Programming Vo.2, Section
      *                  4.5.4., Algorithm P"
      */
-    private static boolean millerRabin(IBigInteger n, int t) {
+    private boolean millerRabin(IBigInteger n, int t) {
         // PRE: n >= 0, t >= 0
-        final IBigInteger n_minus_1 = n.subtract(BigInteger.ONE); // n-1
+        final IBigInteger n_minus_1 = n.subtract_1(); // n-1
         // (q,k) such that: n-1 = q * 2^k and q is odd
         final int k = n_minus_1.getLowestSetBit();
         final IBigInteger q = n_minus_1.shiftRight(k);
@@ -165,7 +156,7 @@ class Primality {
         for (int i = 0; i < t; i++) {
             // To generate a witness 'x', first it use the primes of table
             if (i < primes.length) {
-                x = BIprimes[i];
+                x = BIprimes.get(i);
             } else {
                 throw new UnsupportedOperationException();
             }

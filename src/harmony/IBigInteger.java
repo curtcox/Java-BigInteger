@@ -5,23 +5,32 @@ package harmony;
  */
 interface IBigInteger {
 
+    int certainty = 100;
+
     interface Factory {
         IBigInteger random(int bits);
         IBigInteger prime(int bits);
+        IBigInteger valueOf(long number);
+        IBigInteger from(byte[] bytes);
     }
 
-    IBigInteger subtract(IBigInteger val);
+    IBigInteger.Factory harmony = HarmonyBigIntegerFactory.of();
+    IBigInteger.Factory jdk = JdkBigIntegerFactory.of();
+
     IBigInteger multiply(IBigInteger val);
     IBigInteger mod(IBigInteger val);
     IBigInteger modPow(IBigInteger exponent, IBigInteger m);
+    IBigInteger subtract_1();
+    boolean isZero();
     boolean isOne();
+    boolean isTwo();
+    boolean isEven();
+    boolean isPrime();
+    boolean lessThanOrEqualTo(IBigInteger value);
     IBigInteger shiftRight(int n);
-    int getDigit(int i);
-    int[] digits();
-    int numberLength();
     int bitLength();
-    boolean testBit(int n);
     int getLowestSetBit();
+    byte[] toByteArray();
 
 //    public int getLowestSetBit() {
 //        // (sign != 0) implies that exists some non zero digit

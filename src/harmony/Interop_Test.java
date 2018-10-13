@@ -13,8 +13,9 @@ public class Interop_Test {
 
     static final int positive = 1;
     static final Random random = new SecureRandom();
-    static final int certainty = 100;
     static final int samples = 100;
+    static final IBigInteger.Factory harmony = IBigInteger.harmony;
+    static final IBigInteger.Factory jdk = IBigInteger.jdk;
 
     @Test
     public void equality_0() {
@@ -28,12 +29,12 @@ public class Interop_Test {
 
     @Test
     public void interop_0() {
-        assertInterop(BigInteger.ZERO);
+        assertInterop(harmony.valueOf(0));
     }
 
     @Test
     public void interop_1() {
-        assertInterop(BigInteger.ONE);
+        assertInterop(harmony.valueOf(1));
     }
 
     @Test
@@ -57,30 +58,29 @@ public class Interop_Test {
     }
 
     void assertInteropBitLength(int bitLength) {
-        Set<BigInteger> harmony = new HashSet();
-        Set<java.math.BigInteger> jdk = new HashSet();
+        Set<IBigInteger> set = new HashSet();
+        Set<IBigInteger> ref = new HashSet();
         for (int i=0; i<samples; i++) {
-            BigInteger x = new BigInteger(bitLength,random);
-            jdk.add(assertInterop(x));
-            harmony.add(x);
+            IBigInteger x = harmony.random(bitLength);
+            ref.add(assertInterop(x));
+            set.add(x);
         }
-        assertEquals(jdk.size(),harmony.size());
+        assertEquals(ref.size(),set.size());
     }
 
-    java.math.BigInteger assertInterop(BigInteger x) {
+    IBigInteger assertInterop(IBigInteger x) {
         assertEquals(x,x);
-        int[] digits = x.digits();
-        BigInteger harmonyCopy = new BigInteger(positive,digits);
+        IBigInteger harmonyCopy = harmony.from(x.toByteArray());
         assertEquals(x,harmonyCopy);
         assertEquals(harmonyCopy,x);
         assertEquals(harmonyCopy,harmonyCopy);
-        java.math.BigInteger jdk = new java.math.BigInteger(x.toByteArray());
-        assertEquals(x.isProbablePrime(certainty),jdk.isProbablePrime(certainty));
-        BigInteger thruJdk = new BigInteger(jdk.toByteArray());
-        assertEquals(x,thruJdk);
-        assertEquals(thruJdk,x);
-        assertEquals(thruJdk,thruJdk);
-        return jdk;
+        IBigInteger ref = jdk.from(x.toByteArray());
+        assertEquals(x.isPrime(),ref.isPrime());
+        IBigInteger thruRef = harmony.from(ref.toByteArray());
+        assertEquals(x,thruRef);
+        assertEquals(thruRef,x);
+        assertEquals(thruRef,thruRef);
+        return ref;
     }
 
 }

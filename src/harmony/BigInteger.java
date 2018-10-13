@@ -34,7 +34,7 @@ import java.util.Random;
  * discouraged. In simple words: Do NOT implement any bit fields based on
  * BigInteger.
  */
-public class BigInteger implements IBigInteger {
+public class BigInteger {
 
     /* Fields used for the internal representation. */
 
@@ -133,29 +133,29 @@ public class BigInteger implements IBigInteger {
         cutOffLeadingZeroes();
     }
 
-    /**
-     * Constructs a random {@code BigInteger} instance in the range [0,
-     * 2^(bitLength)-1] which is probably prime. The probability that the
-     * returned {@code BigInteger} is prime is beyond (1-1/2^certainty).
-     *
-     * @param bitLength
-     *            length of the new {@code BigInteger} in bits.
-     * @param certainty
-     *            tolerated primality uncertainty.
-     * @param rnd
-     *            is an optional random generator to be used.
-     * @throws ArithmeticException
-     *             if {@code bitLength} < 2.
-     */
-    public BigInteger(int bitLength, int certainty, Random rnd) {
-        if (bitLength < 2) {
-            throw new ArithmeticException();
-        }
-        BigInteger me = (BigInteger) Primality.consBigInteger(bitLength, certainty, rnd);
-        sign = me.sign;
-        numberLength = me.numberLength;
-        digits = me.digits;
-    }
+//    /**
+//     * Constructs a random {@code BigInteger} instance in the range [0,
+//     * 2^(bitLength)-1] which is probably prime. The probability that the
+//     * returned {@code BigInteger} is prime is beyond (1-1/2^certainty).
+//     *
+//     * @param bitLength
+//     *            length of the new {@code BigInteger} in bits.
+//     * @param certainty
+//     *            tolerated primality uncertainty.
+//     * @param rnd
+//     *            is an optional random generator to be used.
+//     * @throws ArithmeticException
+//     *             if {@code bitLength} < 2.
+//     */
+//    public BigInteger(int bitLength, int certainty, Random rnd) {
+//        if (bitLength < 2) {
+//            throw new ArithmeticException();
+//        }
+//        BigInteger me = (BigInteger) Primality.consBigInteger(bitLength, certainty, rnd);
+//        sign = me.sign;
+//        numberLength = me.numberLength;
+//        digits = me.digits;
+//    }
 
     /**
      * Constructs a new {@code BigInteger} from the given two's complement
@@ -340,8 +340,8 @@ public class BigInteger implements IBigInteger {
      * @throws NullPointerException
      *             if {@code val == null}.
      */
-    public BigInteger subtract(IBigInteger val) {
-        return Elementary.subtract(this, (BigInteger) val);
+    public BigInteger subtract(BigInteger val) {
+        return Elementary.subtract(this, val);
     }
 
     /**
@@ -481,6 +481,24 @@ public class BigInteger implements IBigInteger {
         return i < 0;
     }
 
+    public int compareTo(BigInteger val) {
+        if (sign > val.sign) {
+            return GREATER;
+        }
+        if (sign < val.sign) {
+            return LESS;
+        }
+        if (numberLength > val.numberLength) {
+            return sign;
+        }
+        if (numberLength < val.numberLength) {
+            return -val.sign;
+        }
+        // Equal sign and equal numberLength
+        return (sign * Elementary.compareArrays(digits, val.digits,
+                numberLength));
+    }
+
     /**
      * Returns a new {@code BigInteger} whose value is {@code this * val}.
      *
@@ -490,8 +508,8 @@ public class BigInteger implements IBigInteger {
      * @throws NullPointerException
      *             if {@code val == null}.
      */
-    public IBigInteger multiply(IBigInteger val) {
-        return Multiplication.multiply(this, (BigInteger) val);
+    public BigInteger multiply(BigInteger val) {
+        return Multiplication.multiply(this, val);
     }
 
     /**
@@ -551,9 +569,7 @@ public class BigInteger implements IBigInteger {
      *             if {@code m < 0} or if {@code exponent<0} and this is not
      *             relatively prime to {@code m}.
      */
-    public BigInteger modPow(IBigInteger iexponent, IBigInteger im) {
-        BigInteger exponent = (BigInteger) iexponent;
-        BigInteger m = (BigInteger) im;
+    public BigInteger modPow(BigInteger exponent, BigInteger m) {
         if (m.sign <= 0) {
             throw new ArithmeticException();
         }
@@ -580,8 +596,8 @@ public class BigInteger implements IBigInteger {
      * @throws ArithmeticException
      *             if {@code m < 0}.
      */
-    public BigInteger mod(IBigInteger im) {
-        BigInteger m = (BigInteger) im;
+    public BigInteger mod(BigInteger im) {
+        BigInteger m = im;
         if (m.sign <= 0) {
             throw new ArithmeticException();
         }
@@ -589,40 +605,40 @@ public class BigInteger implements IBigInteger {
         return ((rem.sign < 0) ? rem.add(m) : rem);
     }
 
-    /**
-     * Tests whether this {@code BigInteger} is probably prime. If {@code true}
-     * is returned, then this is prime with a probability beyond
-     * (1-1/2^certainty). If {@code false} is returned, then this is definitely
-     * composite. If the argument {@code certainty} <= 0, then this method
-     * returns true.
-     *
-     * @param certainty
-     *            tolerated primality uncertainty.
-     * @return {@code true}, if {@code this} is probably prime, {@code false}
-     *         otherwise.
-     */
-    public boolean isProbablePrime(int certainty) {
-        return Primality.isProbablePrime(abs(), certainty);
-    }
+//    /**
+//     * Tests whether this {@code BigInteger} is probably prime. If {@code true}
+//     * is returned, then this is prime with a probability beyond
+//     * (1-1/2^certainty). If {@code false} is returned, then this is definitely
+//     * composite. If the argument {@code certainty} <= 0, then this method
+//     * returns true.
+//     *
+//     * @param certainty
+//     *            tolerated primality uncertainty.
+//     * @return {@code true}, if {@code this} is probably prime, {@code false}
+//     *         otherwise.
+//     */
+//    public boolean isProbablePrime(int certainty) {
+//        return Primality.isProbablePrime(abs(), certainty);
+//    }
 
-    /**
-     * Returns a random positive {@code BigInteger} instance in the range [0,
-     * 2^(bitLength)-1] which is probably prime. The probability that the
-     * returned {@code BigInteger} is prime is beyond (1-1/2^80).
-     * <p>
-     * <b>Implementation Note:</b> Currently {@code rnd} is ignored.
-     *
-     * @param bitLength
-     *            length of the new {@code BigInteger} in bits.
-     * @param rnd
-     *            random generator used to generate the new {@code BigInteger}.
-     * @return probably prime random {@code BigInteger} instance.
-     * @throws IllegalArgumentException
-     *             if {@code bitLength < 2}.
-     */
-    public static BigInteger probablePrime(int bitLength, Random rnd) {
-        return new BigInteger(bitLength, 100, rnd);
-    }
+//    /**
+//     * Returns a random positive {@code BigInteger} instance in the range [0,
+//     * 2^(bitLength)-1] which is probably prime. The probability that the
+//     * returned {@code BigInteger} is prime is beyond (1-1/2^80).
+//     * <p>
+//     * <b>Implementation Note:</b> Currently {@code rnd} is ignored.
+//     *
+//     * @param bitLength
+//     *            length of the new {@code BigInteger} in bits.
+//     * @param rnd
+//     *            random generator used to generate the new {@code BigInteger}.
+//     * @return probably prime random {@code BigInteger} instance.
+//     * @throws IllegalArgumentException
+//     *             if {@code bitLength < 2}.
+//     */
+//    public static BigInteger probablePrime(int bitLength, Random rnd) {
+//        return new BigInteger(bitLength, 100, rnd);
+//    }
 
     /* Private Methods */
 
