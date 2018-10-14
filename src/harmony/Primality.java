@@ -56,16 +56,6 @@ final class Primality {
             110, 105, 101, 96, 92, 87, 83, 78, 73, 69, 64, 59, 54, 49, 44, 38,
             32, 26, 1 };
 
-//    /**
-//     * It encodes how many i-bit primes there are in the table for
-//     * {@code i=2,...,10}. For example {@code offsetPrimes[6]} says that from
-//     * index {@code 11} exists {@code 7} consecutive {@code 6}-bit prime
-//     * numbers in the array.
-//     */
-//    private static final int[][] offsetPrimes = { null, null, { 0, 2 },
-//            { 2, 2 }, { 4, 2 }, { 6, 5 }, { 11, 7 }, { 18, 13 }, { 31, 23 },
-//            { 54, 43 }, { 97, 75 } };
-
     static final int certainty = IBigInteger.certainty;
 
     private Primality(List<IBigInteger> BIprimes) {
@@ -79,7 +69,6 @@ final class Primality {
         }
         return new Primality(big);
     }
-
 
     /**
      //* @see BigInteger#isProbablePrime(int)

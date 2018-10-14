@@ -2,17 +2,12 @@ package harmony;
 
 import org.junit.jupiter.api.Test;
 
-import java.security.SecureRandom;
-import java.util.HashSet;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class Interop_Test {
+public class HarmonyInterop_Test {
 
-    static final int positive = 1;
-    static final Random random = new SecureRandom();
     static final int samples = 100;
     static final IBigInteger.Factory harmony = IBigInteger.harmony;
     static final IBigInteger.Factory jdk = IBigInteger.jdk;
